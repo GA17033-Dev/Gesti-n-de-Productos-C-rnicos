@@ -1,8 +1,7 @@
 # Sistema de Gestión de Productos Cárnicos (SGPC)
 
 ## Descripción
-El Sistema de Gestión de Productos Cárnicos (SGPC) es una aplicación web diseñada para ayudar a las empresas en la industria cárnica a gestionar eficientemente sus productos, ventas, inventario y reportes. Desarrollado con PHP, MySQL, HTML5, CSS3 y JavaScript, este sistema ofrece una solución completa para la gestión diaria de negocios relacionados con productos cárnicos.
-
+El Sistema de Gestión de Productos Cárnicos (SGPC) es una aplicación web diseñada para ayudar a las empresas en la industria cárnica a gestionar eficientemente sus productos, ventas, inventario y reportes. Desarrollado con PHP, MySQL, HTML5, CSS3 y JavaScript.
 ## Características
 - Gestión de inventario de productos cárnicos
 - Procesamiento de ventas y órdenes
@@ -18,3 +17,5 @@ El Sistema de Gestión de Productos Cárnicos (SGPC) es una aplicación web dise
 
 ## Instalación
 1. Clonar el repositorio:
+2. Navegar al directorio del proyecto:
+3. Instalar dependencias con Composer:
