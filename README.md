@@ -20,16 +20,17 @@ El Sistema de Gestión de Productos Cárnicos (SGPC) es una aplicación web dise
 2. **Instalar Dependencias**
 
 Ejecuta Composer para instalar las dependencias del proyecto: composer install
+
 3. **Configurar Variables de Entorno**
 
 Copia el archivo de ejemplo de variables de entorno y configúralo:
 Abre el archivo `.env` y configura tus variables de entorno, especialmente las relacionadas con la base de datos:
-DB_CONNECTION=mysql
-DB_HOST=127.0.0.1
-DB_PORT=3306
-DB_DATABASE=example
-DB_USERNAME=root
-DB_PASSWORD=
+      DB_CONNECTION=mysql
+      DB_HOST=127.0.0.1
+      DB_PORT=3306
+      DB_DATABASE=example
+      DB_USERNAME=root
+      DB_PASSWORD=
 
 4. **Crear la Base de Datos**
 
