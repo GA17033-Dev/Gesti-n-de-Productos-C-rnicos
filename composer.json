@@ -1,0 +1,19 @@
+{
+    "name": "alexis/gestion-productos-carnicos",
+    "description": "Sistema de Gestión de Productos Cárnicos",
+    "type": "project",
+    "require": {
+        "bramus/router": "^1.6"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "authors": [
+        {
+            "name": "alexis-garcia-dev",
+            "email": "cristian.garcia@goes.gob.sv"
+        }
+    ]
+}
