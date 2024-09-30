@@ -1,9 +1,14 @@
 <?php
 namespace App\Controllers;
 use App\Models\User;
+use App\Lib\Controller;
 
-class HomeController
+class HomeController extends Controller
 {
+    public function __construct()
+    {
+        parent::__construct();
+    }
     public function index()
     {
         
