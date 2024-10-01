@@ -4,7 +4,13 @@ namespace App\Lib;
 
 class Model
 {
+
     private Database $db;
+
+    function __construct()
+    {
+        $this->db = new Database();
+    }
 
     public function query($query)
     {
@@ -13,5 +19,10 @@ class Model
     public function prepare($query)
     {
         return $this->db->connect()->prepare($query);
+    }
+    //lastInsertId
+    public function lastInsertId()
+    {
+        return $this->db->connect()->lastInsertId();
     }
 }
