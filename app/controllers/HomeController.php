@@ -4,6 +4,7 @@ namespace App\Controllers;
 
 use App\Models\User;
 use App\Lib\Controller;
+use App\Lib\Functions;
 
 class HomeController extends Controller
 {
@@ -13,31 +14,31 @@ class HomeController extends Controller
     }
     public function index()
     {
-
-        $user = new User();
-        $users = $user->all();
-        echo json_encode($users);
-        
+        $user = User::all();
+        if ($user) {
+            // Esto devolverá automáticamente un array con los datos del usuario
+            return Functions::response($user);
+        } else {
+            return Functions::response("Usuario no encontrado", 404);
+        }
     }
 
-    //encriptar contraseña
-    public function encryptPassword($password)
-    {
-        return password_hash($password, PASSWORD_DEFAULT);
-    }
+
 
     public function store()
     {
         $data = [
             'name' => $_POST['name'],
             'email' => $_POST['email'],
-            'password' => $this->encryptPassword($_POST['password'])
+            'password' => Functions::encryptPassword($_POST['password'])
         ];
 
         $user = new User($data);
         $user->save();
         echo 'User created';
     }
-    
-    
+
+
+    //respoder a una solicitud
+
 }
