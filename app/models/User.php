@@ -6,7 +6,14 @@ class User extends BaseModel
 {
     protected $table = 'users';
     protected $fillable = [
-        'name', 'email', 'password', 'username', 'telefono', 'direccion', 'estado', 'email_verified_at'
+        'name',
+        'email',
+        'password',
+        'username',
+        'telefono',
+        'direccion',
+        'estado',
+        'email_verified_at'
     ];
     protected $hidden = ['password'];
 
