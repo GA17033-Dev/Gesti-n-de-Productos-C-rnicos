@@ -2,27 +2,21 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
-
 class User extends BaseModel
 {
     protected $table = 'users';
-    protected $fillable = ['name', 'email', 'password'];
+    protected $fillable = [
+        'name', 'email', 'password', 'username', 'telefono', 'direccion', 'estado', 'email_verified_at'
+    ];
     protected $hidden = ['password'];
 
-    public function setPassword($password)
+    public function roles()
     {
-        $this->attributes['password'] = password_hash($password, PASSWORD_DEFAULT);
+        return $this->belongsToMany(Rol::class, 'roles_usuarios', 'id_usuario', 'id_rol');
     }
-
-    public function verifyPassword($password)
+    //ventas
+    public function ventas()
     {
-        return password_verify($password, $this->password);
-    }
-
-    public function updatePassword($password)
-    {
-        $this->setPassword($password);
-        return $this->update();
+        return $this->hasMany(Venta::class, 'id_usuario');
     }
 }

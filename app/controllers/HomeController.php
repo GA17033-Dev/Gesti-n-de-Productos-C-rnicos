@@ -13,15 +13,13 @@ class HomeController extends Controller
         parent::__construct();
     }
     public function index()
-    {
-        $user = User::all();
-        if ($user) {
-            // Esto devolverá automáticamente un array con los datos del usuario
-            return Functions::response($user);
-        } else {
-            return Functions::response("Usuario no encontrado", 404);
-        }
+{
+    $user = User::with('roles','venta')->find(1);
+    if ($user) {
+        return Functions::response($user, 200);
     }
+    return Functions::response("Usuario no encontrado", 404);
+}
 
 
 

@@ -13,11 +13,63 @@ abstract class BaseModel extends Model implements JsonSerializable
     protected $fillable = [];
     protected $hidden = [];
     protected $attributes = [];
+    protected static $with = [];
+    protected $relations = [];
 
     public function __construct(array $attributes = [])
     {
         parent::__construct();
         $this->fill($attributes);
+    }
+
+    public static function with($relations)
+    {
+        $instance = new static;
+        static::$with = is_string($relations) ? func_get_args() : $relations;
+        return $instance;
+    }
+
+    public function get()
+    {
+        $results = $this->all();
+        foreach ($results as $result) {
+            $this->loadRelations($result);
+        }
+        return $results;
+    }
+
+    protected function loadRelations($model)
+    {
+        foreach (static::$with as $relation) {
+            if (method_exists($model, $relation)) {
+                $model->relations[$relation] = $model->$relation();
+            }
+        }
+    }
+
+    public static function find($id)
+    {
+        $instance = new static;
+        $query = "SELECT * FROM {$instance->table} WHERE id = :id LIMIT 1";
+        $stmt = $instance->prepare($query);
+        $stmt->bindValue(':id', $id, PDO::PARAM_INT);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            $model = $instance->fill($result);
+            $instance->loadRelations($model);
+            return $model;
+        }
+        return null;
+    }
+
+    public function toArray()
+    {
+        $array = array_diff_key($this->attributes, array_flip($this->hidden));
+        foreach ($this->relations as $key => $value) {
+            $array[$key] = $value;
+        }
+        return $array;
     }
 
     public function fill(array $attributes)
@@ -124,19 +176,9 @@ abstract class BaseModel extends Model implements JsonSerializable
         }, $results));
     }
 
-    public function toArray()
-    {
-        return array_diff_key($this->attributes, array_flip($this->hidden));
-    }
-
     public function __toString()
     {
         return json_encode($this->toArray());
-    }
-
-    public static function find($id)
-    {
-        return static::where('id', $id);
     }
 
     public static function where($field, $value)
@@ -165,5 +207,74 @@ abstract class BaseModel extends Model implements JsonSerializable
         return array_map(function ($item) {
             return $item instanceof self ? $item->toArray() : $item;
         }, $items);
+    }
+
+    protected function hasOne($relatedModel, $foreignKey = null, $localKey = 'id')
+    {
+        $relatedInstance = new $relatedModel();
+        $foreignKey = $foreignKey ?: strtolower(class_basename($this)) . '_id';
+        $query = "SELECT * FROM {$relatedInstance->table} WHERE $foreignKey = :localKey LIMIT 1";
+        $stmt = $this->prepare($query);
+        $stmt->bindValue(':localKey', $this->$localKey);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $relatedInstance->fill($result) : null;
+    }
+
+    protected function hasMany($relatedModel, $foreignKey = null, $localKey = 'id')
+    {
+        $relatedInstance = new $relatedModel();
+        $foreignKey = $foreignKey ?: strtolower(class_basename($this)) . '_id';
+        $query = "SELECT * FROM {$relatedInstance->table} WHERE $foreignKey = :localKey";
+        $stmt = $this->prepare($query);
+        $stmt->bindValue(':localKey', $this->$localKey);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return array_map(function ($result) use ($relatedModel) {
+            return (new $relatedModel())->fill($result);
+        }, $results);
+    }
+
+    protected function belongsTo($relatedModel, $foreignKey = null, $ownerKey = 'id')
+    {
+        $relatedInstance = new $relatedModel();
+        $foreignKey = $foreignKey ?: strtolower(class_basename($relatedInstance)) . '_id';
+        $query = "SELECT * FROM {$relatedInstance->table} WHERE $ownerKey = :foreignKey LIMIT 1";
+        $stmt = $this->prepare($query);
+        $stmt->bindValue(':foreignKey', $this->$foreignKey);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        return $result ? $relatedInstance->fill($result) : null;
+    }
+
+    protected function belongsToMany($relatedModel, $pivotTable = null, $foreignPivotKey = null, $relatedPivotKey = null, $parentKey = 'id', $relatedKey = 'id')
+    {
+        $relatedInstance = new $relatedModel();
+        $pivotTable = $pivotTable ?: $this->getPivotTableName(get_class($this), get_class($relatedInstance));
+        $foreignPivotKey = $foreignPivotKey ?: strtolower(class_basename($this)) . '_id';
+        $relatedPivotKey = $relatedPivotKey ?: strtolower(class_basename($relatedInstance)) . '_id';
+
+        $query = "SELECT {$relatedInstance->table}.* FROM {$relatedInstance->table} 
+                  INNER JOIN $pivotTable ON {$relatedInstance->table}.$relatedKey = $pivotTable.$relatedPivotKey
+                  WHERE $pivotTable.$foreignPivotKey = :parentKey";
+
+        $stmt = $this->prepare($query);
+        $stmt->bindValue(':parentKey', $this->$parentKey);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+        return array_map(function ($result) use ($relatedModel) {
+            return (new $relatedModel())->fill($result);
+        }, $results);
+    }
+
+    private function getPivotTableName($model1, $model2)
+    {
+        $models = [
+            strtolower(class_basename($model1)),
+            strtolower(class_basename($model2))
+        ];
+        sort($models);
+        return implode('_', $models);
     }
 }
