@@ -6,7 +6,8 @@ class User extends BaseModel
 {
     protected $table = 'users';
     protected $fillable = [
-        'name',
+        'nombre',
+        'apellido',
         'email',
         'password',
         'username',

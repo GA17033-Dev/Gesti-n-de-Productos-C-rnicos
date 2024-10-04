@@ -305,4 +305,30 @@ abstract class BaseModel extends Model implements JsonSerializable
         sort($models);
         return implode('_', $models);
     }
+
+    public static function first()
+    {
+        $instance = new static;
+        $query = "SELECT * FROM {$instance->table} LIMIT 1";
+        $stmt = $instance->prepare($query);
+        $stmt->execute();
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $instance->fill($result);
+        }
+        return null;
+    }
+
+    public function attach($relatedModel, $foreignKey = null, $relatedKey = null)
+    {
+        $relatedInstance = new $relatedModel();
+        $foreignKey = $foreignKey ?: strtolower(class_basename($this)) . '_id';
+        $relatedKey = $relatedKey ?: strtolower(class_basename($relatedInstance)) . '_id';
+        $pivotTable = $this->getPivotTableName(get_class($this), get_class($relatedInstance));
+        $query = "INSERT INTO $pivotTable ($foreignKey, $relatedKey) VALUES (:foreignKey, :relatedKey)";
+        $stmt = $this->prepare($query);
+        $stmt->bindValue(':foreignKey', $this->id);
+        $stmt->bindValue(':relatedKey', $relatedInstance->id);
+        return $stmt->execute();
+    }
 }
