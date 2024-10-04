@@ -19,4 +19,9 @@ class User extends BaseModel
     {
         return $this->hasMany(Venta::class, 'id_usuario');
     }
+
+    public function setPasswordAttribute($value)
+    {
+        $this->attributes['password'] = password_hash($value, PASSWORD_DEFAULT);
+    }
 }

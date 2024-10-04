@@ -19,4 +19,16 @@ class Venta extends BaseModel
         'updated_at'
     ];
     protected $hidden = [];
+
+    public function usuario()
+    {
+        return $this->belongsTo(User::class, 'id_usuario');
+    }
+
+    public function detalleVenta()
+    {
+        return $this->hasMany(DetalleVenta::class, 'id_venta');
+    }
+
+    
 }

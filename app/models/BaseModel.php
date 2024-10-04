@@ -22,12 +22,30 @@ abstract class BaseModel extends Model implements JsonSerializable
         $this->fill($attributes);
     }
 
+    // public static function with($relations)
+    // {
+    //     $instance = new static;
+    //     static::$with = is_string($relations) ? func_get_args() : $relations;
+    //     return $instance;
+    // }
+
     public static function with($relations)
     {
         $instance = new static;
         static::$with = is_string($relations) ? func_get_args() : $relations;
-        return $instance;
+
+        try {
+            return $instance;
+        } catch (\App\Exceptions\RelationNotFoundException $e) {
+            // Aquí puedes manejar la excepción como prefieras
+            // Por ejemplo, podrías loggear el error y continuar sin la relación
+            error_log($e->getMessage());
+            // Removemos la relación que no existe de static::$with
+            static::$with = array_diff(static::$with, [$e->getRelation()]);
+            return $instance;
+        }
     }
+    
 
     public function get()
     {
@@ -38,11 +56,21 @@ abstract class BaseModel extends Model implements JsonSerializable
         return $results;
     }
 
+    // protected function loadRelations($model)
+    // {
+    //     foreach (static::$with as $relation) {
+    //         if (method_exists($model, $relation)) {
+    //             $model->relations[$relation] = $model->$relation();
+    //         }
+    //     }
+    // }
     protected function loadRelations($model)
     {
         foreach (static::$with as $relation) {
             if (method_exists($model, $relation)) {
                 $model->relations[$relation] = $model->$relation();
+            } else {
+                throw new \App\Exceptions\RelationNotFoundException($relation, $model);
             }
         }
     }

@@ -15,4 +15,9 @@ class Rol extends BaseModel
         'updated_at'
     ];
     protected $hidden = [];
+
+    public function usuarios()
+    {
+        return $this->belongsToMany(User::class, 'roles_usuarios', 'id_rol', 'id_usuario');
+    }
 }

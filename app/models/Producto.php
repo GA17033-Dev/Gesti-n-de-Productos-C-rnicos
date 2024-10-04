@@ -18,4 +18,9 @@ class Producto extends BaseModel
         'updated_at'
     ];
     protected $hidden = [];
+
+    public function categoria()
+    {
+        return $this->belongsTo(Categoria::class, 'id_categoria');
+    }
 }

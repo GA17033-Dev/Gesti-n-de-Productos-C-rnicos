@@ -15,4 +15,9 @@ class Categoria extends BaseModel
         'updated_at'
     ];
     protected $hidden = [];
+
+    public function productos()
+    {
+        return $this->hasMany(Producto::class, 'id_categoria');
+    }
 }
