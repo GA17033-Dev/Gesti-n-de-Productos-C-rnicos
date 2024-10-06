@@ -331,4 +331,17 @@ abstract class BaseModel extends Model implements JsonSerializable
         $stmt->bindValue(':relatedKey', $relatedInstance->id);
         return $stmt->execute();
     }
+    //whereIn
+    public static function whereIn($field, $values)
+    {
+        $instance = new static;
+        $placeholders = implode(',', array_fill(0, count($values), '?'));
+        $query = "SELECT * FROM {$instance->table} WHERE $field IN ($placeholders)";
+        $stmt = $instance->prepare($query);
+        $stmt->execute($values);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return static::collection(array_map(function ($result) {
+            return (new static)->fill($result);
+        }, $results));
+    }
 }

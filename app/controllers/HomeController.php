@@ -22,22 +22,35 @@ class HomeController extends Controller
         // return Functions::response("Usuario no encontrado", 404);
         //crear un usuario
 
-        $data = [
-            'nombre' => 'admin',
-            'email' => 'admin5@admin.com',
-            'apellido' => 'admin1',
-            'password' => Functions::encryptPassword('admin'),
-            'username' => 'admin5',
-            'telefono' => '123456789',
-            'direccion' => 'admin',
-            'estado' => 1,
-            'email_verified_at' => date('Y-m-d H:i:s'),
-        ];
-
-        $user = new User($data);
-        $user->save();
-        $user->roles()->attach(1);
-        return Functions::response($user, 201);
+//        $data = [
+//            'nombre' => 'admin',
+//            'email' => 'admin6@admin.com',
+//            'apellido' => 'admin1',
+//            'password' => Functions::encryptPassword('admin'),
+//            'username' => 'admin6',
+//            'telefono' => '123456789',
+//            'direccion' => 'admin',
+//            'estado' => 1,
+//            'email_verified_at' => date('Y-m-d H:i:s'),
+//        ];
+//        //validar antes que no exista
+//        $user = User::where('email', $data['email'])->first();
+//
+//        if ($user) {
+//            return Functions::response("Usuario ya existe", 400);
+//        }
+//
+//
+//
+//        $user = new User($data);
+//        $user->save();
+//
+//        //asignar rol
+//        $user->roles()->attach(1);
+//
+//        return Functions::response($user, 201);
+        //retornar vista de login
+        return $this->render('login');
     }
 
 
@@ -55,6 +68,33 @@ class HomeController extends Controller
     }
 
 
-    //respoder a una solicitud
+    ///login
+    //recibir datos
+    public function login()
+    {
+        $email = $this->post('email');
+        $password = $this->post('password');
+
+        if (!$email || !$password) {
+            return Functions::response("Datos incompletos", 400);
+        }
+
+        //buscar usuario
+        $user = User::where('email', $email)->first();
+
+        if (!$user) {
+            return Functions::response("Usuario no encontrado", 404);
+        }
+
+        //verificar contraseña
+        // if (!Functions::verifyPassword($password, $user->password)) {
+        //     return Functions::response("Contraseña incorrecta", 400);
+        // }
+
+        // //generar token
+        // $token = Functions::generateToken($user->id);
+
+        // return Functions::response($token);
+    }
 
 }
