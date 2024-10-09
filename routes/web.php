@@ -10,3 +10,5 @@ $router->get('/register', 'App\Controllers\HomeController@register');
 //register/user
 
 $router->post('/register/user', 'App\Controllers\HomeController@registerUser');
+//dashboard
+$router->get('/dashboard', 'App\Controllers\HomeController@dashboard');

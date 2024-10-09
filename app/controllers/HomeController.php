@@ -148,4 +148,9 @@ class HomeController extends Controller
             ], 500)->send();
         }
     }
+
+    public function dashboard()
+    {
+        return $this->render('layout/app');
+    }
 }
