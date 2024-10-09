@@ -30,4 +30,15 @@ class Controller
         }
         return $_GET[$param];
     }
+
+    //redirect
+    public function redirect(string $url, $data = [])
+    {
+        foreach ($data as $key => $value) {
+
+            $this->view->addData($key, $value);
+        }
+
+        header("Location: $url");
+    }
 }
