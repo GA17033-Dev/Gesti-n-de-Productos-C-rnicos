@@ -22,13 +22,6 @@ abstract class BaseModel extends Model implements JsonSerializable
         $this->fill($attributes);
     }
 
-    // public static function with($relations)
-    // {
-    //     $instance = new static;
-    //     static::$with = is_string($relations) ? func_get_args() : $relations;
-    //     return $instance;
-    // }
-
     public static function with($relations)
     {
         $instance = new static;
@@ -37,15 +30,11 @@ abstract class BaseModel extends Model implements JsonSerializable
         try {
             return $instance;
         } catch (\App\Exceptions\RelationNotFoundException $e) {
-            // Aquí puedes manejar la excepción como prefieras
-            // Por ejemplo, podrías loggear el error y continuar sin la relación
             error_log($e->getMessage());
-            // Removemos la relación que no existe de static::$with
             static::$with = array_diff(static::$with, [$e->getRelation()]);
             return $instance;
         }
     }
-    
 
     public function get()
     {
@@ -56,14 +45,6 @@ abstract class BaseModel extends Model implements JsonSerializable
         return $results;
     }
 
-    // protected function loadRelations($model)
-    // {
-    //     foreach (static::$with as $relation) {
-    //         if (method_exists($model, $relation)) {
-    //             $model->relations[$relation] = $model->$relation();
-    //         }
-    //     }
-    // }
     protected function loadRelations($model)
     {
         foreach (static::$with as $relation) {
@@ -331,7 +312,7 @@ abstract class BaseModel extends Model implements JsonSerializable
         $stmt->bindValue(':relatedKey', $relatedInstance->id);
         return $stmt->execute();
     }
-    //whereIn
+
     public static function whereIn($field, $values)
     {
         $instance = new static;
@@ -343,5 +324,38 @@ abstract class BaseModel extends Model implements JsonSerializable
         return static::collection(array_map(function ($result) {
             return (new static)->fill($result);
         }, $results));
+    }
+
+    public static function whereNotIn($field, $values)
+    {
+        $instance = new static;
+        $placeholders = implode(',', array_fill(0, count($values), '?'));
+        $query = "SELECT * FROM {$instance->table} WHERE $field NOT IN ($placeholders)";
+        $stmt = $instance->prepare($query);
+        $stmt->execute($values);
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return static::collection(array_map(function ($result) {
+            return (new static)->fill($result);
+        }, $results));
+    }
+
+    public static function beginTransaction()
+    {
+        return self::getDb()->beginTransaction();
+    }
+
+    public static function commit()
+    {
+        return self::getDb()->commit();
+    }
+
+    public static function rollBack()
+    {
+        return self::getDb()->rollBack();
+    }
+
+    protected static function getDb()
+    {
+        return parent::getDb();
     }
 }

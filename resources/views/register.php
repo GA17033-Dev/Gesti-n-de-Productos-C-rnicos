@@ -52,7 +52,7 @@
                             <button class="btn btn-primary d-block btn-user w-100" type="button" onclick="register()">Registrarse</button>
                             <hr>
                         </form>
-                        <div class="text-center"><a class="small" href="forgot-password.html">Olvidaste tu contraseña?</a></div>
+                        <!-- <div class="text-center"><a class="small" href="forgot-password.html">Olvidaste tu contraseña?</a></div> -->
                         <div class="text-center"><a class="small" href="/">Ya tienes una cuenta? Inicia sesión!</a></div>
                     </div>
                 </div>
@@ -115,7 +115,7 @@
                 address: address
             },
             success: function(response) {
-                if (response.success) {
+           
                     Swal.fire({
                         icon: 'success',
                         title: 'Registro exitoso',
@@ -125,13 +125,13 @@
                     }).then(function() {
                         window.location.href = '/';
                     });
-                } else {
-                    Swal.fire({
-                        icon: 'error',
-                        title: 'Error',
-                        text: response.message
-                    });
-                }
+
+            },error: function(response) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: response.responseJSON.message
+                });
             }
         });
     }

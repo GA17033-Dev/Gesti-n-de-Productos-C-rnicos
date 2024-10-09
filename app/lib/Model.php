@@ -2,27 +2,51 @@
 
 namespace App\Lib;
 
-class Model
-{
+class Model {
+    protected static $db;
 
-    private Database $db;
-
-    function __construct()
+    public function __construct()
     {
-        $this->db = new Database();
+        if (!self::$db) {
+            self::$db = Database::getInstance();
+        }
     }
 
     public function query($query)
     {
-        return $this->db->connect()->query($query);
+        return self::$db->query($query);
     }
+
     public function prepare($query)
     {
-        return $this->db->connect()->prepare($query);
+        return self::$db->prepare($query);
     }
-    //lastInsertId
+
     public function lastInsertId()
     {
-        return $this->db->connect()->lastInsertId();
+        return self::$db->lastInsertId();
+    }
+
+    public static function beginTransaction()
+    {
+        return self::getDb()->beginTransaction();
+    }
+
+    public static function commit()
+    {
+        return self::getDb()->commit();
+    }
+
+    public static function rollBack()
+    {
+        return self::getDb()->rollBack();
+    }
+
+    protected static function getDb()
+    {
+        if (!self::$db) {
+            self::$db = Database::getInstance();
+        }
+        return self::$db;
     }
 }

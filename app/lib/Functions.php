@@ -53,7 +53,8 @@ class Functions
     }
     public static function generateUsername($name, $lastName)
     {
-        return strtolower(substr($name, 0, 1) . $lastName);
+       // return strtolower(substr($name, 0, 1) . $lastName); agregar un numero aleatorio
+         return strtolower(substr($name, 0, 1) . $lastName . rand(0, 100));
 
     }
 }
