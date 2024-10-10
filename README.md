@@ -1,6 +1,3 @@
-Aquí tienes una versión mejorada y ordenada del archivo README para el **Sistema de Gestión de Productos Cárnicos (SGPC)** en un formato adecuado para GitHub:
-
----
 
 # Sistema de Gestión de Productos Cárnicos (SGPC)
 
