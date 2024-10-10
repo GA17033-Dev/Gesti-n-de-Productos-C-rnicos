@@ -13,4 +13,6 @@ $router->post('/register/user', 'App\Controllers\HomeController@registerUser');
 //dashboard
 $router->get('/dashboard', 'App\Controllers\HomeController@dashboard');
 //index users
-$router->get('/users', 'App\Controllers\UserController@index');
+$router->get('/usuarios', 'App\Controllers\UserController@index');
+//prdouctos
+$router->get('/productos', 'App\Controllers\ProductoController@index');

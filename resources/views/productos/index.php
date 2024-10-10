@@ -5,7 +5,7 @@ use App\Lib\View;
 View::extends('layout/layout');
 
 View::section('title');
-echo 'Listado de Usuarios';
+echo 'Listado de Productos';
 View::endSection('title');
 
 View::section('content');
@@ -23,30 +23,23 @@ View::section('content');
         border-bottom: 0;
     }
 </style>
-<h1 class="h3 mb-4 text-gray-800 text-center">Listado de Usuarios</h1>
+<h1 class="h3 mb-4 text-gray-800 text-center">Listado de Productos</h1>
 <div class="container-fluid">
     <div class="table table-bordered table-hover">
         <table id="users" class="table table-bordered table-hover mb-4 " style="width:100%">
             <thead class="thead-dark">
                 <tr>
                     <th>Nombre</th>
-                    <th>Email</th>
-                    <th>Telefono</th>
+                    <th>Categoria</th>
+                    <th>Descripcion</th>
+                    <th>Precio</th>
+                    <th>Stock</th>
+                    <th>Estado</th>
                     <th>Acciones</th>
                 </tr>
             </thead>
             <tbody>
-                <?php foreach ($users as $user) : ?>
-                    <tr>
-                        <td data-label="Nombre"><?= $user['nombre'] . ' ' . $user['apellido'] ?></td>
-                        <td data-label="Email"><?= $user['email'] ?? '' ?></td>
-                        <td data-label="Telefono"><?= $user['telefono'] ?? '' ?></td>
-                        <td data-label="Acciones">
-                            <button class="btn btn-sm btn-primary" href="#"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-sm btn-danger" href="#"><i class="fas fa-trash"></i></button>
-                        </td>
-                    </tr>
-                <?php endforeach; ?>
+                
             </tbody>
         </table>
     </div>
@@ -63,7 +56,7 @@ View::section('scripts');
         $('#users').DataTable({
             "language": {
                 "lengthMenu": "Mostrar _MENU_ registros por página",
-                "zeroRecords": "Nada encontrado - lo siento",
+                "zeroRecords": "No se encontraron registros",
                 "searchPlaceholder": "Buscar",
                 "info": "Mostrando la página _PAGE_ de _PAGES_",
                 "infoEmpty": "No hay registros disponibles",
