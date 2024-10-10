@@ -16,3 +16,5 @@ $router->get('/dashboard', 'App\Controllers\HomeController@dashboard');
 $router->get('/usuarios', 'App\Controllers\UserController@index');
 //prdouctos
 $router->get('/productos', 'App\Controllers\ProductoController@index');
+//roles
+$router->get('/roles', 'App\Controllers\RolController@index');
