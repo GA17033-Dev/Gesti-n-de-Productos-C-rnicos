@@ -18,3 +18,5 @@ $router->get('/usuarios', 'App\Controllers\UserController@index');
 $router->get('/productos', 'App\Controllers\ProductoController@index');
 //roles
 $router->get('/roles', 'App\Controllers\RolController@index');
+//roles/add
+$router->post('/roles/add', 'App\Controllers\RolController@store');

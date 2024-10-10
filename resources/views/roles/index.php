@@ -143,11 +143,20 @@ View::section('scripts');
                 descripcion: descripcion
             },
             success: function(response) {
+
                 Swal.fire({
                     icon: 'success',
-                    title: 'Exito',
-                    text: response.message,
+                    title: 'Rol Guardado',
+                    text: 'El rol se guardo correctamente',
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
                 });
+
             },
             error: function() {
                 Swal.fire({
