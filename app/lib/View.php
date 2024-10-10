@@ -4,18 +4,54 @@ namespace App\Lib;
 
 class View
 {
-    private array $d;
+    protected static $blocks = [];
+    protected static $layout = null;
 
-
-    public function render(string $name, array $data = [])
+    public static function render($view, $data = [])
     {
-        $this->d = $data;
-        require_once __DIR__ . '/../../resources/views/' . $name . '.php';
+        extract($data);
+        
+        ob_start();
+        include self::getViewPath($view);
+        $content = ob_get_clean();
+
+        if (static::$layout) {
+            include self::getViewPath(static::$layout);
+        } else {
+            echo $content;
+        }
+
+        static::$layout = null;
+        static::$blocks = [];
     }
-    
 
-    public function addData(string $key, $value)
+    protected static function getViewPath($view)
     {
-        $this->d[$key] = $value;
+        return __DIR__ . '/../../resources/views/' . $view . '.php';
+    }
+
+    public static function extends($layout)
+    {
+        static::$layout = $layout;
+    }
+
+    public static function section($name)
+    {
+        ob_start();
+    }
+
+    public static function endSection($name)
+    {
+        static::$blocks[$name] = ob_get_clean();
+    }
+
+    public static function yield($name)
+    {
+        echo static::$blocks[$name] ?? '';
+    }
+
+    public static function addData($key, $value)
+    {
+        $$key = $value;
     }
 }

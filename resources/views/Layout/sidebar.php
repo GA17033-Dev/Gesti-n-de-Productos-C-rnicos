@@ -11,7 +11,7 @@
             <!--productos , categorias, usuarios, ventas estadisticas poner iconos-->
             <li class="nav-item"><a class="nav-link" href="tables.html"><i class="fas fa-box"></i><span>Productos</span></a></li>
             <li class="nav-item"><a class="nav-link" href="tables.html"><i class="fas fa-list"></i><span>Categorias</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="tables.html"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="users"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             <li class="nav-item"><a class="nav-link" href="tables.html"><i class="fas fa-chart-line"></i><span>Ventas</span></a></li>
             <li class="nav-item"><a class="nav-link" href="tables.html"><i class="fas fa-chart-bar"></i><span>Estadisticas</span></a></li>
 

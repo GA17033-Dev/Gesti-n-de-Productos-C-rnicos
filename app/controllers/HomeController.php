@@ -62,7 +62,6 @@ class HomeController extends Controller
     public function register()
     {
         return $this->render('register');
-
     }
     //registerUser
     public function registerUser()
@@ -133,7 +132,6 @@ class HomeController extends Controller
                 'success' => true,
                 'message' => 'Usuario registrado correctamente'
             ])->send();
-
         } catch (\Exception $e) {
             User::rollBack();
             return Response::json([
@@ -141,7 +139,7 @@ class HomeController extends Controller
                 'message' => 'Error al registrar el usuario: ' . $e->getMessage()
             ], 500)->send();
         } catch (\Error $e) {
-           User::rollBack();
+            User::rollBack();
             return Response::json([
                 'success' => false,
                 'message' => 'Error crítico al registrar el usuario: ' . $e->getMessage()
@@ -151,6 +149,11 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        return $this->render('layout/app');
+        $users = User::all();
+
+
+        return $this->render('admin/dashboard/index', [
+            'users' => $users
+        ]);
     }
 }
