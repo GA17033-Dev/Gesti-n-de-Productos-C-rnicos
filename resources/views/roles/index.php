@@ -49,8 +49,14 @@ View::section('content');
                         <td data-label="Descripcion"><?= $role['descripcion'] ?></td>
                         <td data-label="Estado"><?= $role['estado'] == 1 ? '<span class="badge bg-success"><i class="fas fa-check"></i> Activo</span>' : '<span class="badge bg-danger"><i class="fas fa-times"></i> Inactivo</span>' ?></td>
                         <td data-label="Acciones">
-                            <button class="btn btn-sm btn-primary" href="#"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-sm btn-danger" href="#"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-sm btn-primary" onclick="editRole(<?= $role['id'] ?>)" href="#"><i class="fas fa-edit"></i></button>
+                            <?php if ($role['estado'] == 1) : ?>
+                                <button class="btn btn-sm btn-danger" onclick="deleteRole(<?= $role['id'] ?>)" href="#"><i class="fas fa-trash"></i></button>
+                            <?php endif; ?>
+                            <?php if ($role['estado'] == 0) : ?>
+                                <!--recuperar-->
+                                <button class="btn btn-sm btn-success" onclick="recoverRole(<?= $role['id'] ?>)" href="#"><i class="fas fa-recycle"></i></button>
+                            <?php endif; ?>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -86,6 +92,37 @@ View::section('content');
         </div>
     </div>
 </div>
+<?php foreach ($roles as $role) : ?>
+    <!--editar modal-->
+    <div class="modal fade" id="editRoleModal<?= $role['id'] ?>" tabindex="-1" aria-labelledby="editRoleModalLabel<?= $role['id'] ?>" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editRoleModalLabel<?= $role['id'] ?>">Editar Rol</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div>
+                        <div class="mb-3">
+                            <!--edit_nombre + id-->
+                            <label for="edit_nombre" class="form-label">Nombre</label>
+                            <input type="text" class="form-control" id="edit_nombre<?= $role['id'] ?>" name="edit_nombre" required placeholder="Nombre del Rol" value="<?= $role['nombre'] ?>">
+                        </div>
+                        <div class="mb-3">
+                            <label for="edit_descripcion" class="form-label">Descripcion</label>
+                            <textarea class="form-control" id="edit_descripcion<?= $role['id'] ?>" name="edit_descripcion" required placeholder="Descripcion del Rol"><?= $role['descripcion'] ?></textarea>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                            <button type="button" class="btn btn-primary" onclick="saveRole(<?= $role['id'] ?>)">Guardar</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+<?php endforeach; ?>
+
 
 <?php
 View::endSection('content');
@@ -166,8 +203,138 @@ View::section('scripts');
                 });
             }
         });
+    }
 
-        //cerrar el modal
+    const editRole = (id) => {
+        $('#editRoleModal' + id).modal('show');
+    }
+    const saveRole = (id) => {
+        let nombre = $('#edit_nombre' + id).val();
+        let descripcion = $('#edit_descripcion' + id).val();
+
+        if (nombre == '' || descripcion == '') {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Todos los campos son obligatorios',
+            });
+            return;
+        }
+        let data = {
+            id: id,
+            nombre: nombre,
+            descripcion: descripcion
+        };
+        console.log('data', data);
+        $.ajax({
+            url: '/roles/edit',
+            type: 'POST',
+            data: data,
+            success: function(response) {
+
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Rol Guardado',
+                    text: 'El rol se guardo correctamente',
+                    showConfirmButton: true,
+                    allowOutsideClick: false,
+                    allowEscapeKey: false,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        location.reload();
+                    }
+                });
+
+            },
+            error: function() {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrio un error al guardar el rol',
+                });
+            }
+        });
+    }
+
+    const deleteRole = (id) => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "El rol se deshabilitara y no podra ser utilizado",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, deshabilitar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/roles/delete',
+                    type: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Deshabilitado!',
+                            'El rol ha sido deshabilitado.',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ocurrio un error al deshabilitar el rol',
+                        });
+                    }
+                });
+            }
+        });
+        
+    }
+
+    const recoverRole = (id) => {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "El rol se habilitara y podra ser utilizado",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Si, habilitar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                $.ajax({
+                    url: '/roles/recover',
+                    type: 'POST',
+                    data: {
+                        id: id
+                    },
+                    success: function(response) {
+                        Swal.fire(
+                            'Habilitado!',
+                            'El rol ha sido habilitado.',
+                            'success'
+                        ).then((result) => {
+                            if (result.isConfirmed) {
+                                location.reload();
+                            }
+                        });
+                    },
+                    error: function() {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error',
+                            text: 'Ocurrio un error al habilitar el rol',
+                        });
+                    }
+                });
+            }
+        });
     }
 </script>
 <?php

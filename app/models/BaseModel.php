@@ -141,6 +141,29 @@ abstract class BaseModel extends Model implements JsonSerializable
         return false;
     }
 
+    // protected function update()
+    // {
+    //     $fields = array_intersect_key($this->attributes, array_flip($this->fillable));
+    //     $fields['updated_at'] = date('Y-m-d H:i:s');
+
+    //     $fieldUpdates = [];
+    //     foreach (array_keys($fields) as $field) {
+    //         $fieldUpdates[] = "$field = :$field";
+    //     }
+    //     $fieldUpdatesStr = implode(', ', $fieldUpdates);
+
+    //     $query = "UPDATE {$this->table} SET $fieldUpdatesStr WHERE id = :id";
+
+    //     $stmt = $this->prepare($query);
+
+    //     foreach ($fields as $key => $value) {
+    //         $stmt->bindValue(":$key", $value);
+    //     }
+    //     $stmt->bindValue(':id', $this->attributes['id']);
+
+    //     return $stmt->execute();
+    // }
+
     protected function update()
     {
         $fields = array_intersect_key($this->attributes, array_flip($this->fillable));

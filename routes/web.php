@@ -20,3 +20,10 @@ $router->get('/productos', 'App\Controllers\ProductoController@index');
 $router->get('/roles', 'App\Controllers\RolController@index');
 //roles/add
 $router->post('/roles/add', 'App\Controllers\RolController@store');
+//put /roles/edit/id
+$router->post('/roles/edit', 'App\Controllers\RolController@updateRol');
+///roles/delete
+$router->post('/roles/delete', 'App\Controllers\RolController@deleteRol');
+///roles/recover
+$router->post('/roles/recover', 'App\Controllers\RolController@recoverRol');
+

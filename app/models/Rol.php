@@ -7,7 +7,6 @@ class Rol extends BaseModel
 {
     protected $table = 'roles';
     protected $fillable = [
-        'id',
         'nombre',
         'descripcion',
         'estado',

@@ -41,4 +41,92 @@ class RolController extends Controller
             ], 500)->send();
         }
     }
+
+    //update
+    public function updateRol()
+    {
+        try {
+            $data = [
+                'id' => intval($_POST['id']),
+                'nombre' => $_POST['nombre'],
+                'descripcion' => $_POST['descripcion']
+            ];
+
+            $rol = Rol::find($data['id']);
+            if (!$rol) {
+                throw new \Exception("Rol no encontrado");
+            }
+
+            $rol->fill($data);
+            if ($rol->save()) {
+                return Response::json([
+                    'success' => true,
+                    'message' => 'Rol actualizado con éxito'
+                ])->send();
+            } else {
+                throw new \Exception("No se pudo actualizar el rol");
+            }
+        } catch (\Exception $e) {
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500)->send();
+        }
+    }
+    public function deleteRol()
+    {
+        try {
+            $data = [
+                'id' => intval($_POST['id'])
+            ];
+
+            $rol = Rol::find($data['id']);
+            $rol->estado = 0;
+            if (!$rol) {
+                throw new \Exception("Rol no encontrado");
+            }
+
+            if ($rol->save()) {
+                return Response::json([
+                    'success' => true,
+                    'message' => 'Rol eliminado con éxito'
+                ])->send();
+            } else {
+                throw new \Exception("No se pudo eliminar el rol");
+            }
+        } catch (\Exception $e) {
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500)->send();
+        }
+    }
+    public function recoverRol()
+    {
+        try {
+            $data = [
+                'id' => intval($_POST['id'])
+            ];
+
+            $rol = Rol::find($data['id']);
+            $rol->estado = 1;
+            if (!$rol) {
+                throw new \Exception("Rol no encontrado");
+            }
+
+            if ($rol->save()) {
+                return Response::json([
+                    'success' => true,
+                    'message' => 'Rol recuperado con éxito'
+                ])->send();
+            } else {
+                throw new \Exception("No se pudo recuperar el rol");
+            }
+        } catch (\Exception $e) {
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500)->send();
+        }
+    }
 }
