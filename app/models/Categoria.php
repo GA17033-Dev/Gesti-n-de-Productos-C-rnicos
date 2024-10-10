@@ -8,7 +8,6 @@ class Categoria extends BaseModel
 {
     protected $table = 'categorias';
     protected $fillable = [
-        'id',
         'nombre',
         'descripcion',
         'created_at',

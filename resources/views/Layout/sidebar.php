@@ -10,7 +10,7 @@
             <li class="nav-item"><a class="nav-link active" href="#"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
             <!--productos , categorias, usuarios, ventas estadisticas poner iconos-->
             <li class="nav-item"><a class="nav-link" href="productos"><i class="fas fa-box"></i><span>Productos</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-list"></i><span>Categorias</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="categorias"><i class="fas fa-list"></i><span>Categorias</span></a></li>
             <li class="nav-item"><a class="nav-link" href="usuarios"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             <!--roles y permisos-->
             <li class="nav-item"><a class="nav-link" href="roles"><i class="fas fa-user-shield"></i><span>Roles</span></a></li>

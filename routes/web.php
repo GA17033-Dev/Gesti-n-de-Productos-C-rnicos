@@ -26,4 +26,10 @@ $router->post('/roles/edit', 'App\Controllers\RolController@updateRol');
 $router->post('/roles/delete', 'App\Controllers\RolController@deleteRol');
 ///roles/recover
 $router->post('/roles/recover', 'App\Controllers\RolController@recoverRol');
+//categorias
+$router->get('/categorias', 'App\Controllers\CategoriaController@index');
+///categorias/store
+$router->post('/categorias/store', 'App\Controllers\CategoriaController@store');
+//categorias/update
+$router->post('/categorias/update', 'App\Controllers\CategoriaController@updateCategoria');
 
