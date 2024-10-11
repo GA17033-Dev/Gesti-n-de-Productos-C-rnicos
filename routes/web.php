@@ -32,4 +32,6 @@ $router->get('/categorias', 'App\Controllers\CategoriaController@index');
 $router->post('/categorias/store', 'App\Controllers\CategoriaController@store');
 //categorias/update
 $router->post('/categorias/update', 'App\Controllers\CategoriaController@updateCategoria');
+///productos/store
+$router->post('/productos/store', 'App\Controllers\ProductoController@store');
 
