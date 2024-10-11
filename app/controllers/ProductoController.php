@@ -17,7 +17,7 @@ class ProductoController extends Controller
 
     public function index()
     {
-        $productos = Producto::all(); 
+        $productos = Producto::all();
 
         foreach ($productos as &$producto) {
             $categoria = Categoria::find($producto['id_categoria']);
@@ -49,6 +49,67 @@ class ProductoController extends Controller
             return Response::json([
                 'success' => true,
                 'message' => 'Producto creado correctamente'
+            ])->send();
+        } catch (\Exception $e) {
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500)->send();
+        }
+    }
+
+    public function updateProducto()
+    {
+        try {
+            $data = [
+                'id' => intval($_POST['id']),
+                'id_categoria' => intval($_POST['categoria']),
+                'nombre' => $_POST['nombre'],
+                'descripcion' => $_POST['descripcion'],
+                'precio' => $_POST['precio'],
+                'stock' => $_POST['stock'],
+                'estado' => 1
+            ];
+            $producto = Producto::find($data['id']);
+            if (!$producto) {
+                return Response::json([
+                    'success' => false,
+                    'message' => 'Producto no encontrado'
+                ], 404)->send();
+            }
+            $producto->fill($data);
+            $producto->save();
+            return Response::json([
+                'success' => true,
+                'message' => 'Producto actualizado correctamente'
+            ])->send();
+        } catch (\Exception $e) {
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500)->send();
+        }
+    }
+
+    public function deleteProducto()
+    {
+        try {
+            $data = [
+                'id' => intval($_POST['id']),
+                'estado' => $_POST['estado'] == 'true' ? 1 : 0
+            ];
+            $producto = Producto::find($data['id']);
+            if (!$producto) {
+                return Response::json([
+                    'success' => false,
+                    'message' => 'Producto no encontrado'
+                ], 404)->send();
+            }
+            $producto->estado = $data['estado'];
+            $producto->save();
+            return Response::json([
+                'success' => true,
+                'message' => 'Producto eliminado correctamente'
             ])->send();
         } catch (\Exception $e) {
             return Response::json([
