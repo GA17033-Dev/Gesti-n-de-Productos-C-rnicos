@@ -31,14 +31,11 @@ View::section('content');
                 <i class="fas fa-plus"></i>
                 Agregar Producto
             </button>
-<<<<<<< HEAD
             <!--exportar en excel-->
             <button type="button" class="btn btn-success btn-sm flex-grow-1 flex-md-grow-0" onclick="exportTableToExcel('users', 'productos')" title="Exportar a Excel">
                 <i class="fas fa-file-excel"></i>
                 Exportar a Excel
             </button>
-=======
->>>>>>> 41b76dd185c2604788ece6d7ab5c3fe256ac5265
         </div>
     </div>
     <div class="table table-bordered table-hover">
@@ -318,11 +315,7 @@ View::section('scripts');
         });
     }
 
-<<<<<<< HEAD
     const eliminarProducto = (id, estado) => {
-=======
-    const eliminarProducto = (id,estado) => {
->>>>>>> 41b76dd185c2604788ece6d7ab5c3fe256ac5265
         Swal.fire({
             title: '¿Estás seguro?',
             text: "¡No podrás revertir esto!",
