@@ -61,7 +61,7 @@ Luego, configura las variables de entorno del archivo `.env`:
 DB_CONNECTION=mysql
 DB_HOST=localhost
 DB_PORT=3306
-DB_DATABASE=sistema_ventas_laravel
+DB_DATABASE=sistema_ventas
 DB_USERNAME=root
 DB_PASSWORD=
 
@@ -74,7 +74,7 @@ El proyecto incluye un script SQL para crear y configurar la base de datos. Sigu
 
 #### Opción A: Usando phpMyAdmin (incluido en Laragon o XAMPP)
 1. Abre phpMyAdmin desde el panel de control de Laragon o XAMPP.
-2. Crea una nueva base de datos llamada `sistema_ventas_laravel`.
+2. Crea una nueva base de datos llamada `sistema_ventas`.
 3. Selecciona la base de datos recién creada.
 4. Ve a la pestaña **Importar**.
 5. Selecciona el archivo `script.sql` ubicado en la raíz del proyecto.
