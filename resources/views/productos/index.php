@@ -31,6 +31,11 @@ View::section('content');
                 <i class="fas fa-plus"></i>
                 Agregar Producto
             </button>
+            <!--exportar en excel-->
+            <button type="button" class="btn btn-success btn-sm flex-grow-1 flex-md-grow-0" onclick="exportTableToExcel('users', 'productos')" title="Exportar a Excel">
+                <i class="fas fa-file-excel"></i>
+                Exportar a Excel
+            </button>
         </div>
     </div>
     <div class="table table-bordered table-hover">
@@ -310,7 +315,7 @@ View::section('scripts');
         });
     }
 
-    const eliminarProducto = (id,estado) => {
+    const eliminarProducto = (id, estado) => {
         Swal.fire({
             title: '¿Estás seguro?',
             text: "¡No podrás revertir esto!",
@@ -346,6 +351,42 @@ View::section('scripts');
                             text: error.responseJSON.message,
                         });
                     }
+                });
+            }
+        });
+    }
+    const exportTableToExcel = (tableID, filename = '') => {
+        let tipo = 'excel';
+        let tabla = tableID;
+        $.ajax({
+            url: '/exportar',
+            type: 'POST',
+            data: {
+                tabla,
+                tipo
+            },
+            xhrFields: {
+                responseType: 'blob' 
+            },
+            success: function(response) {
+                const blob = new Blob([response], {
+                    type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+                });
+                const url = window.URL.createObjectURL(blob);
+                const link = document.createElement('a');
+                link.href = url;
+                var name = new Date().toISOString().slice(0, 10);
+                link.setAttribute('download', filename + name + '.xlsx');
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                window.URL.revokeObjectURL(url);
+            },
+            error: function(error) {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Hubo un problema al generar el archivo Excel.',
                 });
             }
         });

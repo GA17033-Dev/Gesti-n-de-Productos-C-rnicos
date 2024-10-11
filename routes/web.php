@@ -38,4 +38,6 @@ $router->post('/productos/store', 'App\Controllers\ProductoController@store');
 $router->post('/productos/update', 'App\Controllers\ProductoController@updateProducto');
 ///productos/delete
 $router->post('/productos/delete', 'App\Controllers\ProductoController@deleteProducto');
+//exportar
+$router->post('/exportar', 'App\Controllers\ProductoController@exportar');
 
