@@ -86,7 +86,7 @@ El proyecto incluye un script SQL para crear y configurar la base de datos. Sigu
 3. Ejecuta el siguiente comando:
 
    ```bash
-   mysql -u root -p sistema_ventas_laravel < script.sql
+   mysql -u root -p sistema_ventas < script.sql
    ```
 
 4. Ingresa la contraseña de MySQL cuando se te solicite.
