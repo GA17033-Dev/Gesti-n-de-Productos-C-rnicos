@@ -4,7 +4,7 @@ namespace App\Models;
 
 use App\Models\BaseModel;
 
-class Categoria extends BaseModel
+class Categoria extends BaseModel 
 {
     protected $table = 'categorias';
     protected $fillable = [
@@ -13,10 +13,9 @@ class Categoria extends BaseModel
         'created_at',
         'updated_at'
     ];
-    protected $hidden = [];
 
     public function productos()
     {
-        return $this->hasMany(Producto::class, 'id_categoria');
+        return $this->hasMany(Producto::class, 'id_categoria', 'id');
     }
 }
