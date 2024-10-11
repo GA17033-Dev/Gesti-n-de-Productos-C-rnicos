@@ -32,4 +32,12 @@ $router->get('/categorias', 'App\Controllers\CategoriaController@index');
 $router->post('/categorias/store', 'App\Controllers\CategoriaController@store');
 //categorias/update
 $router->post('/categorias/update', 'App\Controllers\CategoriaController@updateCategoria');
+///productos/store
+$router->post('/productos/store', 'App\Controllers\ProductoController@store');
+///productos/update
+$router->post('/productos/update', 'App\Controllers\ProductoController@updateProducto');
+///productos/delete
+$router->post('/productos/delete', 'App\Controllers\ProductoController@deleteProducto');
+//exportar
+$router->post('/exportar', 'App\Controllers\ProductoController@exportar');
 
