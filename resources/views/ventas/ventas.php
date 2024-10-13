@@ -78,7 +78,7 @@ View::section('content');
                                 </tr>
                             </thead>
                             <tbody>
-                                <!-- Los productos se cargarán aquí dinámicamente -->
+                 
                             </tbody>
                         </table>
                     </div>
@@ -102,7 +102,6 @@ View::section('content');
                             </tr>
                         </thead>
                         <tbody>
-                            <!-- Los productos seleccionados se cargarán aquí -->
                         </tbody>
                     </table>
                 </div>
@@ -263,7 +262,6 @@ View::section('content');
 
     function realizarVenta() {
         if (productosSeleccionados.length === 0) {
-            //swa
             Swal.fire({
                 icon: 'error',
                 title: 'Error',
