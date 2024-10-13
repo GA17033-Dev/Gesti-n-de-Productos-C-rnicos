@@ -40,4 +40,8 @@ $router->post('/productos/update', 'App\Controllers\ProductoController@updatePro
 $router->post('/productos/delete', 'App\Controllers\ProductoController@deleteProducto');
 //exportar
 $router->post('/exportar', 'App\Controllers\ProductoController@exportar');
+//ventas
+$router->get('/ventas', 'App\Controllers\VentaController@index');
+///productos/buscar
+$router->post('/productos/buscar', 'App\Controllers\ProductoController@buscar');
 
