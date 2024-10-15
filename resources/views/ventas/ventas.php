@@ -51,12 +51,29 @@ View::section('content');
         border-color: #4a90e2;
         box-shadow: 0 0 0 0.2rem rgba(74, 144, 226, 0.25);
     }
+
+    /* Responsiveness adjustments */
+    @media (max-width: 768px) {
+        .selected-products {
+            max-height: 200px;
+        }
+    }
+
+    @media (max-width: 576px) {
+        .d-flex {
+            display: block !important;
+        }
+
+        .d-flex .justify-content-between {
+            justify-content: flex-start !important;
+        }
+    }
 </style>
 
 <h2 class="h3 mb-4 text-gray-800 text-center">Sistema de Ventas</h2>
 <div class="container-fluid mt-4">
     <div class="row">
-        <div class="col-md-8">
+        <div class="col-lg-8 col-md-7">
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0 text-primary">Productos Disponibles</h5>
@@ -78,7 +95,6 @@ View::section('content');
                                 </tr>
                             </thead>
                             <tbody>
-                 
                             </tbody>
                         </table>
                     </div>
@@ -86,7 +102,7 @@ View::section('content');
             </div>
         </div>
 
-        <div class="col-md-4">
+        <div class="col-lg-4 col-md-5">
             <div class="card mb-4">
                 <div class="card-header">
                     <h5 class="mb-0 text-primary">Productos Seleccionados</h5>
@@ -116,11 +132,11 @@ View::section('content');
                         <span>Subtotal:</span>
                         <span id="subtotal">$0.00</span>
                     </div>
-                    <div class="d-flex justify-content-between mb-2">
+                    <div class="d-flex justify-content-between align-items-center mb-2">
                         <span>Descuento:</span>
-                        <div>
-                            <input type="number" id="discountInput" class="form-control form-control-sm" style="width: 80px;" min="0" max="100" value="0">
-                            <small class="text-muted">%</small>
+                        <div class="input-group" style="width: 100px;">
+                            <input type="number" id="discountInput" class="form-control form-control-sm" min="0" max="100" value="0">
+                            <span class="input-group-text">%</span>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between mb-3">
@@ -134,6 +150,8 @@ View::section('content');
     </div>
 </div>
 
+<script src="https://code.jquery.com/jquery-3.7.1.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script src="https://code.jquery.com/jquery-3.7.1.js"></script>
 <script>
     let productos = [];
