@@ -10,51 +10,59 @@ use App\Services\AuthService;
 use App\Lib\Response;
 use App\Models\Producto;
 use App\Models\Venta;
+use App\Models\Categoria;
+use App\Lib\View;
+use Exception; // Asegúrate de importar Exception
 
 class HomeController extends Controller
 {
+    public function obtenerProductos() {
+        return Producto::all(); 
+    }
 
     public function __construct()
     {
         parent::__construct();
     }
+
     public function index()
     {
-
         return $this->render('login');
     }
-    // Método para obtener los totales y enviar como JSON
-    public function getTotals()
-    {
-        // Obtener el total de productos
-        $totalProductos = Producto::count(); // Asegúrate de que tu modelo Product tenga este método
 
-        // Obtener el total de usuarios
-        $totalUsuarios = User::count(); // Asegúrate de que tu modelo User tenga este método
+    public function dashboard() {
+        // Obtener los datos necesarios para el dashboard
+        $productos = $this->obtenerProductos(); // Obtener productos
+        $categorias = $this->obtenerCategorias(); // Obtener categorías
+        
+        // Pasar los datos a la vista
+        View::render('dashboard/index', compact('productos', 'categorias'));
+    }
 
-        // Obtener el total de ventas
-        $totalVentas = Venta::count(); // Asegúrate de que tu modelo Venta tenga este método
+    // Método para obtener categorías
+    public function obtenerCategorias() {
+        return Categoria::all(); // Ajusta según tu implementación
+    }
 
-        // Responder con JSON
+    // Controlador
+    public function obtenerTotales()
+{
+    try {
+        // Obtener los totales de registros activos
+        $totalProductos = Producto::where('estado', 1)->count(); // Filtrar solo productos activos
+        $totalUsuarios = User::where('estado', 1)->count(); // Filtrar solo usuarios activos
+        $totalVentas = Venta::count(); // Ajusta esto según si las ventas tienen un estado o no
+
+        // Devolver los datos en formato JSON
         return Response::json([
             'totalProductos' => $totalProductos,
             'totalUsuarios' => $totalUsuarios,
-            'totalVentas' => $totalVentas
+            'totalVentas' => $totalVentas,
         ])->send();
+    } catch (Exception $e) { // Captura de excepciones
+        return Response::json(['error' => 'Error al obtener totales: ' . $e->getMessage()], 500)->send();
     }
-
-    public function store()
-    {
-        $data = [
-            'name' => $_POST['name'],
-            'email' => $_POST['email'],
-            'password' => Functions::encryptPassword($_POST['password'])
-        ];
-
-        $user = new User($data);
-        $user->save();
-    }
-
+}
 
     public function login()
     {
@@ -83,6 +91,7 @@ class HomeController extends Controller
     {
         return $this->render('register');
     }
+
     //registerUser
     public function registerUser()
     {
@@ -121,7 +130,6 @@ class HomeController extends Controller
             }
 
             $bringUser = User::where('email', $data['email']);
-
             if (!$bringUser) {
                 User::rollBack();
                 return Response::json([
@@ -129,7 +137,6 @@ class HomeController extends Controller
                     'message' => 'No se pudo obtener el ID del usuario'
                 ], 500)->send();
             }
-
 
             // Agregar rol
             $data_role = [
@@ -152,7 +159,7 @@ class HomeController extends Controller
                 'success' => true,
                 'message' => 'Usuario registrado correctamente'
             ])->send();
-        } catch (\Exception $e) {
+        } catch (\Exception $e) { // Captura de excepciones
             User::rollBack();
             return Response::json([
                 'success' => false,
@@ -165,15 +172,5 @@ class HomeController extends Controller
                 'message' => 'Error crítico al registrar el usuario: ' . $e->getMessage()
             ], 500)->send();
         }
-    }
-
-    public function dashboard()
-    {
-        $users = User::all();
-
-
-        return $this->render('admin/dashboard/index', [
-            'users' => $users
-        ]);
     }
 }

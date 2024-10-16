@@ -17,7 +17,7 @@ View::section('content');
             <div class="card text-white bg-primary mb-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">Total Productos</h5>
-                    <h2 class="card-text text-center" id="totalProductos">0</h2>
+                    <h2 class="card-text text-center" id="totalProductos">Cargando...</h2>
                 </div>
             </div>
         </div>
@@ -25,7 +25,7 @@ View::section('content');
             <div class="card text-white bg-success mb-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">Total Usuarios</h5>
-                    <h2 class="card-text text-center" id="totalUsuarios">0</h2>
+                    <h2 class="card-text text-center" id="totalUsuarios">Cargando...</h2>
                 </div>
             </div>
         </div>
@@ -33,7 +33,7 @@ View::section('content');
             <div class="card text-white bg-warning mb-3">
                 <div class="card-body">
                     <h5 class="card-title text-center">Total Ventas</h5>
-                    <h2 class="card-text text-center" id="totalVentas">0</h2>
+                    <h2 class="card-text text-center" id="totalVentas">Cargando...</h2>
                 </div>
             </div>
         </div>
@@ -46,6 +46,8 @@ View::endSection('content');
 View::section('scripts');
 ?>
 
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script> <!-- Asegúrate de incluir jQuery -->
+
 <script>
     function actualizarDatos() {
         $.ajax({
@@ -56,15 +58,21 @@ View::section('scripts');
                 $('#totalProductos').text(data.totalProductos);
                 $('#totalUsuarios').text(data.totalUsuarios);
                 $('#totalVentas').text(data.totalVentas);
+            },
+            error: function(xhr, status, error) {
+                console.error('Error al obtener datos: ', error);
+                alert('Ocurrió un error al obtener los datos.'); // Mensaje de error para el usuario
             }
         });
     }
 
-    // Actualizar datos cada 5 segundos
-    setInterval(actualizarDatos, 5000);
+    // Llamar a la función al cargar la página
+    $(document).ready(function() {
+        actualizarDatos(); // Inicializa la carga de datos
 
-    // Cargar datos al inicio
-    actualizarDatos();
+        // Actualizar datos cada 10 segundos
+        setInterval(actualizarDatos, 10000);
+    });
 </script>
 
 <?php

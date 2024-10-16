@@ -42,5 +42,7 @@ $router->post('/productos/delete', 'App\Controllers\ProductoController@deletePro
 $router->post('/exportar', 'App\Controllers\ProductoController@exportar');
 //dashboard
 // archivo routes.php
-$router->get('/dashboard/totals', 'App\Controllers\HomeController@getTotals');
+$router->get('/obtener_totales', 'App\Controllers\HomeController@obtenerTotales');
+
+
 
