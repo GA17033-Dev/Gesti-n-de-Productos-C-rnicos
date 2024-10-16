@@ -8,6 +8,8 @@ use App\Lib\Controller;
 use App\Lib\Functions;
 use App\Services\AuthService;
 use App\Lib\Response;
+use App\Models\Producto;
+use App\Models\Venta;
 
 class HomeController extends Controller
 {
@@ -21,7 +23,25 @@ class HomeController extends Controller
 
         return $this->render('login');
     }
+    // Método para obtener los totales y enviar como JSON
+    public function getTotals()
+    {
+        // Obtener el total de productos
+        $totalProductos = Producto::count(); // Asegúrate de que tu modelo Product tenga este método
 
+        // Obtener el total de usuarios
+        $totalUsuarios = User::count(); // Asegúrate de que tu modelo User tenga este método
+
+        // Obtener el total de ventas
+        $totalVentas = Venta::count(); // Asegúrate de que tu modelo Venta tenga este método
+
+        // Responder con JSON
+        return Response::json([
+            'totalProductos' => $totalProductos,
+            'totalUsuarios' => $totalUsuarios,
+            'totalVentas' => $totalVentas
+        ])->send();
+    }
 
     public function store()
     {

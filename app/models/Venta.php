@@ -30,5 +30,11 @@ class Venta extends BaseModel
         return $this->hasMany(DetalleVenta::class, 'id_venta');
     }
 
-    
+    public static function count()
+    {
+    $db = static::getDB(); // Método para obtener la conexión a la base de datos
+    $stmt = $db->query("SELECT COUNT(*) FROM ventas"); 
+    return $stmt->fetchColumn();
+    }
+
 }

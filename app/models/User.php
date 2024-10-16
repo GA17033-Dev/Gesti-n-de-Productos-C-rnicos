@@ -32,4 +32,11 @@ class User extends BaseModel
     {
         $this->attributes['password'] = password_hash($value, PASSWORD_DEFAULT);
     }
+     //count usuarios
+    public static function count()
+    {
+    $db = static::getDB(); // Método para obtener la conexión a la base de datos
+    $stmt = $db->query("SELECT COUNT(*) FROM users");
+    return $stmt->fetchColumn();
+    }
 }

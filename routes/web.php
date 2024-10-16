@@ -40,4 +40,7 @@ $router->post('/productos/update', 'App\Controllers\ProductoController@updatePro
 $router->post('/productos/delete', 'App\Controllers\ProductoController@deleteProducto');
 //exportar
 $router->post('/exportar', 'App\Controllers\ProductoController@exportar');
+//dashboard
+// archivo routes.php
+$router->get('/dashboard/totals', 'App\Controllers\HomeController@getTotals');
 
