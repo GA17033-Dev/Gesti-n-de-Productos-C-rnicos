@@ -3,7 +3,7 @@
         'name' => 'alexis/gestion-productos-carnicos',
         'pretty_version' => 'dev-main',
         'version' => 'dev-main',
-        'reference' => '920db9bd601b0bea1bd77389d6e570ccf39b6469',
+        'reference' => '7068b91f3de2b1a7e2a55047f46324c9a51e9264',
         'type' => 'project',
         'install_path' => __DIR__ . '/../../',
         'aliases' => array(),
@@ -13,7 +13,7 @@
         'alexis/gestion-productos-carnicos' => array(
             'pretty_version' => 'dev-main',
             'version' => 'dev-main',
-            'reference' => '920db9bd601b0bea1bd77389d6e570ccf39b6469',
+            'reference' => '7068b91f3de2b1a7e2a55047f46324c9a51e9264',
             'type' => 'project',
             'install_path' => __DIR__ . '/../../',
             'aliases' => array(),

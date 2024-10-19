@@ -1,5 +1,11 @@
 <?php
+//use App\Controllers\HomeController;
 use App\Controllers\HomeController;
+use App\Controllers\UserController;
+use App\Controllers\ProductoController;
+use App\Controllers\RolController;
+use App\Controllers\CategoriaController;
+use App\Controllers\VentaController;
 
 $router->get('/', 'App\Controllers\HomeController@index');
 $router->post('/store', 'App\Controllers\HomeController@store');
