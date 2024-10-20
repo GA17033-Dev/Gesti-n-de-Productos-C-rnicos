@@ -20,13 +20,13 @@ class Controller
 
     protected function render($view, $data = [])
     {
-        // Añadir información del usuario logueado a todas las vistas
+      
         if (isset($_SESSION['user_id'])) {
             $user = User::find($_SESSION['user_id']);
             $data['loggedInUser'] = $user;
         }
 
-        // Tu lógica existente para renderizar la vista
+    
         View::render($view, $data);
     }
     public function post(string $param)
