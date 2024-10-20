@@ -8,7 +8,6 @@ use App\Controllers\CategoriaController;
 use App\Controllers\VentaController;
 use App\Middleware\AuthMiddleware;
 
-// Función para aplicar el middleware de autenticación
 $authMiddleware = function() {
     AuthMiddleware::handle();
 };
@@ -20,7 +19,6 @@ $router->match('GET|POST', '/login', 'App\Controllers\HomeController@login');
 $router->get('/register', 'App\Controllers\HomeController@register');
 $router->post('/register/user', 'App\Controllers\HomeController@registerUser');
 
-// Aplicar middleware de autenticación a todas las rutas protegidas
 $router->before('GET|POST', '/dashboard.*', $authMiddleware);
 $router->before('GET|POST', '/usuarios.*', $authMiddleware);
 $router->before('GET|POST', '/productos.*', $authMiddleware);
@@ -29,7 +27,6 @@ $router->before('GET|POST', '/categorias.*', $authMiddleware);
 $router->before('GET|POST', '/ventas.*', $authMiddleware);
 $router->before('POST', '/exportar', $authMiddleware);
 
-// Rutas protegidas
 $router->get('/dashboard', 'App\Controllers\HomeController@dashboard');
 $router->get('/usuarios', 'App\Controllers\UserController@index');
 $router->get('/productos', 'App\Controllers\ProductoController@index');
@@ -48,5 +45,4 @@ $router->post('/exportar', 'App\Controllers\ProductoController@exportar');
 $router->get('/ventas', 'App\Controllers\VentaController@index');
 $router->post('/productos/buscar', 'App\Controllers\ProductoController@buscar');
 
-// Ruta para cerrar sesión
 $router->get('/logout', 'App\Controllers\HomeController@logout');
