@@ -63,7 +63,6 @@ class HomeController extends Controller
     // }
     public function login()
     {
-        // Si el usuario ya está logueado, redirigir al dashboard
         if (isset($_SESSION['user_id'])) {
             header('Location: /dashboard');
             exit();
@@ -79,7 +78,6 @@ class HomeController extends Controller
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['user_email'] = $user->email;
 
-                // Redirigir al dashboard después de un login exitoso
                 header('Location: /dashboard');
                 exit();
             } else {
@@ -113,7 +111,6 @@ class HomeController extends Controller
     public function registerUser()
     {
         try {
-            // Iniciar una transacción de base de datos
             User::beginTransaction();
 
             $data = [
@@ -172,7 +169,6 @@ class HomeController extends Controller
                 ], 500)->send();
             }
 
-            // Si todo salió bien, confirmar la transacción
             User::commit();
 
             return Response::json([
@@ -206,7 +202,6 @@ class HomeController extends Controller
 
     public function dashboard()
     {
-        // Asegúrate de que el usuario esté logueado antes de mostrar el dashboard
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
             exit();
