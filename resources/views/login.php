@@ -22,31 +22,32 @@
 </style>
 
 <body class="bg-gradient-secondary">
-<div class="container">
-    <div class="row justify-content-center">
-        <div class="col-md-9 col-lg-12 col-xl-10">
-            <div class="card shadow-lg o-hidden border-0 my-5">
-                <div class="card-body p-0">
-                    <div class="row">
-                        <div class="col-lg-6 d-none d-lg-flex">
-                            <div class="flex-grow-1 bg-login-image" style="background-image: url(&quot;assets/img/undraw_Login_re_4vu2.png&quot;);"></div>
-                        </div>
-                        <div class="col-lg-6">
-                            <div class="p-5">
-                                <div class="text-center">
-                                    <h4 class="text-dark mb-4">Bienvenido de nuevo!</h4>
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-md-9 col-lg-12 col-xl-10">
+                <div class="card shadow-lg o-hidden border-0 my-5">
+                    <div class="card-body p-0">
+                        <div class="row">
+                            <div class="col-lg-6 d-none d-lg-flex">
+                                <div class="flex-grow-1 bg-login-image" style="background-image: url(&quot;assets/img/undraw_Login_re_4vu2.png&quot;);"></div>
+                            </div>
+                            <div class="col-lg-6">
+                                <div class="p-5">
+                                    <div class="text-center">
+                                        <h4 class="text-dark mb-4">Bienvenido de nuevo!</h4>
+                                    </div>
+                                    <form class="user">
+                                        <div class="mb-3"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Ingresa tu correo" name="email">
                                 </div>
-                                <form class="user">
-                                    <div class="mb-3"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Ingresa tu correo" name="email"></div>
-                                    <div class="mb-3"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Contraseña" name="password"></div>
-                                    <div class="mb-3">
-                                        <div class="custom-checkbox small">
-                                            <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Recordar</label></div>
-                                        </div>
-                                    </div><button class="btn btn-primary d-block btn-user w-100" type="button" onclick="login()">Iniciar sesión</button>
-                                    <hr>
+                                <div class="mb-3"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Contraseña" name="password"></div>
+                                <div class="mb-3">
+                                    <div class="custom-checkbox small">
+                                        <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Recordar</label></div>
+                                    </div>
+                                </div><button class="btn btn-primary d-block btn-user w-100" type="submit" onclick="login()">Iniciar sesión</button>
+                                <hr>
                                 </form>
-                                <div class="text-center"><a class="small"  href="register">Crear una cuenta</a></div>
+                                <div class="text-center"><a class="small" href="register">Crear una cuenta</a></div>
                             </div>
                         </div>
                     </div>
@@ -54,35 +55,45 @@
             </div>
         </div>
     </div>
-</div>
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-<script>
-    function login() {
-        var email = $("input[name='email']").val();
-        var password = $("input[name='password']").val();
-        $.ajax({
-            url: '/login',
-            type: 'POST',
-            data: {
-                email: email,
-                password: password
-            },
-            success: function(response) {
-                console.log(response);
-            },error: function(response) {
-                console.log(response);
-                Swal.fire({
-                    icon: 'error',
-                    title: 'Oops...',
-                    text: response.responseJSON.message
-                })
-            }
-        });
-    }
+    <script>
+        function login() {
+            var email = $("input[name='email']").val();
+            var password = $("input[name='password']").val();
+            $.ajax({
+                url: '/login',
+                type: 'POST',
+                data: {
+                    email: email,
+                    password: password
+                },
+                success: function(response) {
+                    console.log(response);
+                    Swal.fire({
+                        icon: 'success',
+                        title: 'Bienvenido',
+                        showConfirmButton: false,
+                        timer: 1500
+                    })
+                    setTimeout(function() {
+                        window.location.href = '/dashboard';
+                    }, 1500);
 
-</script>
+                },
+                error: function(response) {
+                    console.log(response);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Oops...',
+                        text: response.responseJSON.message
+                    })
+                }
+            });
+        }
+    </script>
 </body>
 
 </html>

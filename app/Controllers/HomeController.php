@@ -78,8 +78,12 @@ class HomeController extends Controller
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['user_email'] = $user->email;
 
-                header('Location: /dashboard');
-                exit();
+                // header('Location: /dashboard');
+                // exit();
+                return Response::json([
+                    'success' => true,
+                    'message' => 'Bienvenido'
+                ])->send();
             } else {
                 return Response::json([
                     'success' => false,
