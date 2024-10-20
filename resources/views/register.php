@@ -121,7 +121,7 @@
                         title: 'Registro exitoso',
                         text: response.message,
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2500
                     }).then(function() {
                         window.location.href = '/';
                     });

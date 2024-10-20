@@ -76,11 +76,11 @@
                         icon: 'success',
                         title: 'Bienvenido',
                         showConfirmButton: false,
-                        timer: 1500
+                        timer: 2500
                     })
                     setTimeout(function() {
                         window.location.href = '/dashboard';
-                    }, 1500);
+                    }, 2500);
 
                 },
                 error: function(response) {
