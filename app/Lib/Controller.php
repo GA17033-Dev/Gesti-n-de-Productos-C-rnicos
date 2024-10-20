@@ -2,6 +2,8 @@
 
 namespace App\Lib;
 
+use App\Models\User;
+
 class Controller
 {
     private View $view;
@@ -11,9 +13,21 @@ class Controller
         $this->view = new View();
     }
 
-    public function render(string $name, array $data = [])
+    // public function render(string $name, array $data = [])
+    // {
+    //     $this->view->render($name, $data);
+    // }
+
+    protected function render($view, $data = [])
     {
-        $this->view->render($name, $data);
+        // Añadir información del usuario logueado a todas las vistas
+        if (isset($_SESSION['user_id'])) {
+            $user = User::find($_SESSION['user_id']);
+            $data['loggedInUser'] = $user;
+        }
+
+        // Tu lógica existente para renderizar la vista
+        View::render($view, $data);
     }
     public function post(string $param)
     {
@@ -41,6 +55,4 @@ class Controller
 
         header("Location: $url");
     }
-
-    
 }
