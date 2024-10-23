@@ -78,7 +78,7 @@ View::section('content');
                                 </tr>
                             </thead>
                             <tbody>
-                 
+
                             </tbody>
                         </table>
                     </div>
@@ -156,6 +156,7 @@ View::section('content');
                 },
                 success: function(response) {
                     if (response.success) {
+                        console.log('Productos encontrados:', response.productos);
                         productos = response.productos;
                         renderProducts(response.productos);
                     } else {
@@ -200,11 +201,22 @@ View::section('content');
         });
     }
 
+
     function agregarProducto(id) {
         const producto = productos.find(p => p.id === id);
         if (!producto) return;
 
         const productoExistente = productosSeleccionados.find(p => p.id === id);
+
+        // Verificar que la cantidad seleccionada no supere el stock disponible
+        if (productoExistente && productoExistente.cantidad >= producto.stock) {
+            Swal.fire({
+                icon: 'warning',
+                title: 'Stock insuficiente',
+                text: `No puedes agregar más unidades del producto ${producto.nombre}.`
+            });
+            return;
+        }
 
         if (productoExistente) {
             productoExistente.cantidad++;
@@ -236,10 +248,24 @@ View::section('content');
         });
     }
 
+
     function actualizarCantidad(id, cantidad) {
         const producto = productosSeleccionados.find(p => p.id === id);
         if (producto) {
-            producto.cantidad = parseInt(cantidad);
+            cantidad = parseInt(cantidad);
+
+            // Verificar que la nueva cantidad no supere el stock disponible
+            if (cantidad > producto.stock) {
+                Swal.fire({
+                    icon: 'warning',
+                    title: 'Stock insuficiente',
+                    text: `No puedes seleccionar más unidades que el stock disponible (${producto.stock} unidades).`
+                });
+                actualizarTablaProductos(); // Restaurar a la cantidad anterior
+                return;
+            }
+
+            producto.cantidad = cantidad;
             actualizarTablaProductos();
             calcularTotal();
         }
@@ -270,16 +296,37 @@ View::section('content');
             return;
         }
 
+        // Validar que la cantidad seleccionada no exceda el stock disponible
+        let stockExcedido = productosSeleccionados.some(producto => producto.cantidad > producto.stock);
+        if (stockExcedido) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Error',
+                text: 'Hay productos cuya cantidad seleccionada excede el stock disponible.'
+            });
+            return;
+        }
         const venta = {
-            productos: productosSeleccionados,
+            productos: productosSeleccionados.map(producto => ({
+                id: producto.id,
+                cantidad: producto.cantidad
+            })),
             subtotal: $('#subtotal').text(),
             descuento: $('#discountInput').val() + '%',
             total: $('#total').text()
         };
 
         console.log('Venta realizada:', venta);
+
+        Swal.fire({
+            icon: 'success',
+            title: 'Venta realizada',
+            text: 'La venta ha sido procesada con éxito.'
+        });
+
         limpiarVenta();
     }
+
 
     function limpiarVenta() {
         productosSeleccionados = [];
