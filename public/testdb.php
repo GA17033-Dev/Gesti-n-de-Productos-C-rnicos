@@ -1,8 +1,8 @@
 <?php
 $host = 'localhost';
-$db   = 'gestion_carnicos';
+$db   = 'sis_ventas';
 $user = 'root';
-$pass = 'tu_contraseña_mysql';
+$pass = '';
 $charset = 'utf8mb4';
 
 $dsn = "mysql:host=$host;dbname=$db;charset=$charset";
