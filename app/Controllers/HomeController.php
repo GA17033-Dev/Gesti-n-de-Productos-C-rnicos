@@ -160,6 +160,7 @@ class HomeController extends Controller
 
 
             // Agregar rol
+            /*
             $data_role = [
                 'id_usuario' => $bringUser->id,
                 'id_rol' => 2
@@ -172,9 +173,10 @@ class HomeController extends Controller
                     'message' => 'No se pudo asignar el rol al usuario'
                 ], 500)->send();
             }
+            */
 
             User::commit();
-
+            
             return Response::json([
                 'success' => true,
                 'message' => 'Usuario registrado correctamente'
