@@ -36,7 +36,7 @@
                                     <div class="text-center">
                                         <h4 class="text-dark mb-4">Bienvenido de nuevo!</h4>
                                     </div>
-                                    <form class="user">
+                                    <form class="user" method="post">
                                         <div class="mb-3"><input class="form-control form-control-user" type="email" id="exampleInputEmail" aria-describedby="emailHelp" placeholder="Ingresa tu correo" name="email">
                                 </div>
                                 <div class="mb-3"><input class="form-control form-control-user" type="password" id="exampleInputPassword" placeholder="Contraseña" name="password"></div>
@@ -44,7 +44,7 @@
                                     <div class="custom-checkbox small">
                                         <div class="form-check"><input class="form-check-input" type="checkbox" id="formCheck-1"><label class="form-check-label" for="formCheck-1">Recordar</label></div>
                                     </div>
-                                </div><button class="btn btn-primary d-block btn-user w-100" type="submit" onclick="login()">Iniciar sesión</button>
+                                </div><button class="btn btn-primary d-block btn-user w-100" name="btnIngresar" type="submit" onclick="login()">Iniciar sesión</button>
                                 <hr>
                                 </form>
                                 <div class="text-center"><a class="small" href="register">Crear una cuenta</a></div>

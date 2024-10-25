@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Controllers;
+session_start();
 
 use App\Models\RolesUsuario;
 use App\Models\User;
@@ -77,9 +77,9 @@ class HomeController extends Controller
                 $user = User::where('email', $email)->first();
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['user_email'] = $user->email;
-
-                // header('Location: /dashboard');
-                // exit();
+                echo "iniciaste sesion";
+                //header('Location: /dashboard');
+                //exit();
                 return Response::json([
                     'success' => true,
                     'message' => 'Bienvenido'
