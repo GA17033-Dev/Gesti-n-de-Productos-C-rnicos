@@ -1,6 +1,7 @@
 <?php
 namespace App\Controllers;
 use App\Lib\Controller;
+use App\Lib\Response;
 use App\Models\User;
 
 class UserController extends Controller
@@ -15,5 +16,12 @@ class UserController extends Controller
     {
         $users = User::all();
         return $this->render('users/index', ['users' => $users]);
+    }
+    //profile 
+    public function profile()
+    {
+        $user = User::find($_SESSION['user_id']);
+      echo $user;
+        //return $this->render('users/profile', ['user' => $user]);
     }
 }

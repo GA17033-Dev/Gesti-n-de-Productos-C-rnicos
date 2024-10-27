@@ -44,5 +44,7 @@ $router->post('/productos/delete', 'App\Controllers\ProductoController@deletePro
 $router->post('/exportar', 'App\Controllers\ProductoController@exportar');
 $router->get('/ventas', 'App\Controllers\VentaController@index');
 $router->post('/productos/buscar', 'App\Controllers\ProductoController@buscar');
+//profile
+$router->get('/profile', 'App\Controllers\UserController@profile');
 
 $router->get('/logout', 'App\Controllers\HomeController@logout');
