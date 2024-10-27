@@ -46,5 +46,6 @@ $router->get('/ventas', 'App\Controllers\VentaController@index');
 $router->post('/productos/buscar', 'App\Controllers\ProductoController@buscar');
 //profile
 $router->get('/profile', 'App\Controllers\UserController@profile');
+$router->post('/profile/update', 'App\Controllers\UserController@updateProfile');
 
 $router->get('/logout', 'App\Controllers\HomeController@logout');
