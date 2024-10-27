@@ -151,25 +151,6 @@ class ProductoController extends Controller
         header('Cache-Control: max-age=0');
         $writer->save('php://output');
         return;
-    }
-    //buscar
-    public function buscar()
-    {
-        $productos = Producto::where('nombre', 'like', '%' . $_POST['nombre'] . '%')->get();
-
-        foreach ($productos as &$producto) {
-            $categoria = Categoria::find($producto['id_categoria']);
-            if (!$categoria) {
-                error_log("Categoría no encontrada para id: " . $producto['id_categoria']);
-                $producto['categoria'] = null;
-            } else {
-                $producto['categoria'] = $categoria->toArray();
-            }
-        }
-
-        return Response::json([
-            'success' => true,
-            'productos' => $productos
-        ])->send();
+       
     }
 }

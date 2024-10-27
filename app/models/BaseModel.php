@@ -15,7 +15,6 @@ abstract class BaseModel extends Model implements JsonSerializable
     protected $attributes = [];
     protected static $with = [];
     protected $relations = [];
-    protected $whereConditions = [];
 
     public function __construct(array $attributes = [])
     {
@@ -39,26 +38,11 @@ abstract class BaseModel extends Model implements JsonSerializable
 
     public function get()
     {
-        $query = "SELECT * FROM {$this->table}";
-        $params = [];
-
-        if (!empty($this->whereConditions)) {
-            $whereClause = [];
-            foreach ($this->whereConditions as $condition) {
-                list($field, $operator, $value) = $condition;
-                $whereClause[] = "$field $operator ?";
-                $params[] = $value;
-            }
-            $query .= " WHERE " . implode(' AND ', $whereClause);
+        $results = $this->all();
+        foreach ($results as $result) {
+            $this->loadRelations($result);
         }
-
-        $stmt = $this->prepare($query);
-        $stmt->execute($params);
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return static::collection(array_map(function ($result) {
-            return (new static)->fill($result);
-        }, $results));
+        return $results;
     }
 
     protected function loadRelations($model)
@@ -229,22 +213,19 @@ abstract class BaseModel extends Model implements JsonSerializable
         return json_encode($this->toArray());
     }
 
-    
-    public static function where($field, $operator, $value = null)
+    public static function where($field, $value)
     {
         $instance = new static;
-        if ($value === null) {
-            $value = $operator;
-            $operator = '=';
+        $query = "SELECT * FROM {$instance->table} WHERE $field = :$field";
+        $stmt = $instance->prepare($query);
+        $stmt->bindValue(":$field", $value);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $instance->fill($result);
         }
-
-        $instance->addWhereCondition($field, $operator, $value);
-        return $instance;
-    }
-
-    protected function addWhereCondition($field, $operator, $value)
-    {
-        $this->whereConditions[] = [$field, $operator, $value];
+        return null;
     }
 
     #[\ReturnTypeWillChange]
