@@ -14,8 +14,8 @@
             <li class="nav-item"><a class="nav-link" href="usuarios"><i class="fas fa-users"></i><span>Usuarios</span></a></li>
             <!--roles y permisos-->
             <li class="nav-item"><a class="nav-link" href="roles"><i class="fas fa-user-shield"></i><span>Roles</span></a></li>
-            <li class="nav-item"><a class="nav-link" href="ventas"><i class="fas fa-chart-line"></i><span>Ventas</span></a></li>
-            <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i><span>Estadisticas</span></a></li> -->
+            <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-line"></i><span>Ventas</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i><span>Estadisticas</span></a></li>
 
         </ul>
         <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>

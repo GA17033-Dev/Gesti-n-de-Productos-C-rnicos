@@ -25,7 +25,7 @@ class Functions
 
     public static function attempt($email, $password)
     {
-        $user = User::where('email', $email)->first();
+        $user = User::where('email', $email);
         if ($user && password_verify($password, $user->password)) {
             $_SESSION['user_id'] = $user->id;
             return true;

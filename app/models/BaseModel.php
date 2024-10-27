@@ -15,7 +15,6 @@ abstract class BaseModel extends Model implements JsonSerializable
     protected $attributes = [];
     protected static $with = [];
     protected $relations = [];
-    protected $whereConditions = [];
 
     public function __construct(array $attributes = [])
     {
@@ -37,42 +36,14 @@ abstract class BaseModel extends Model implements JsonSerializable
         }
     }
 
-    // public function get()
-    // {
-    //     $query = "SELECT * FROM {$this->table}";
-    //     $params = [];
-
-    //     if (!empty($this->whereConditions)) {
-    //         $whereClause = [];
-    //         foreach ($this->whereConditions as $condition) {
-    //             list($field, $operator, $value) = $condition;
-    //             $whereClause[] = "$field $operator ?";
-    //             $params[] = $value;
-    //         }
-    //         $query .= " WHERE " . implode(' AND ', $whereClause);
-    //     }
-
-    //     $stmt = $this->prepare($query);
-    //     $stmt->execute($params);
-    //     $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-    //     return static::collection(array_map(function ($result) {
-    //         return (new static)->fill($result);
-    //     }, $results));
-    // }
     public function get()
     {
-        $query = $this->buildSelectQuery();
-        $stmt = $this->prepare($query);
-        $this->bindWhereValues($stmt);
-        $stmt->execute();
-        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        return static::collection(array_map(function ($result) {
-            return (new static)->fill($result);
-        }, $results));
+        $results = $this->all();
+        foreach ($results as $result) {
+            $this->loadRelations($result);
+        }
+        return $results;
     }
-
 
     protected function loadRelations($model)
     {
@@ -242,27 +213,19 @@ abstract class BaseModel extends Model implements JsonSerializable
         return json_encode($this->toArray());
     }
 
-
-    public static function where($field, $operator, $value = null)
+    public static function where($field, $value)
     {
         $instance = new static;
-        if ($value === null) {
-            $value = $operator;
-            $operator = '=';
+        $query = "SELECT * FROM {$instance->table} WHERE $field = :$field";
+        $stmt = $instance->prepare($query);
+        $stmt->bindValue(":$field", $value);
+        $stmt->execute();
+
+        $result = $stmt->fetch(PDO::FETCH_ASSOC);
+        if ($result) {
+            return $instance->fill($result);
         }
-
-        $instance->addWhereCondition($field, $operator, $value);
-        return $instance;
-    }
-
-    // protected function addWhereCondition($field, $operator, $value)
-    // {
-    //     $this->whereConditions[] = [$field, $operator, $value];
-    // }
-
-    protected function addWhereCondition($field, $operator, $value)
-    {
-        $this->whereConditions[] = [$field, $operator, $value];
+        return null;
     }
 
     #[\ReturnTypeWillChange]
@@ -347,59 +310,17 @@ abstract class BaseModel extends Model implements JsonSerializable
         return implode('_', $models);
     }
 
-    public function first()
+    public static function first()
     {
-        $query = $this->buildSelectQuery(true);
-        $stmt = $this->prepare($query);
-        $this->bindWhereValues($stmt);
+        $instance = new static;
+        $query = "SELECT * FROM {$instance->table} LIMIT 1";
+        $stmt = $instance->prepare($query);
         $stmt->execute();
         $result = $stmt->fetch(PDO::FETCH_ASSOC);
-
         if ($result) {
-            return (new static)->fill($result);
+            return $instance->fill($result);
         }
         return null;
-    }
-
-    protected function buildSelectQuery($limit = false)
-    {
-        $query = "SELECT * FROM {$this->table}";
-
-        if (!empty($this->whereConditions)) {
-            $whereClause = [];
-            foreach ($this->whereConditions as $condition) {
-                list($field, $operator, $value) = $condition;
-                $whereClause[] = "$field $operator ?";
-            }
-            $query .= " WHERE " . implode(' AND ', $whereClause);
-        }
-
-        if ($limit) {
-            $query .= " LIMIT 1";
-        }
-
-        return $query;
-    }
-
-    protected function bindWhereValues($stmt)
-    {
-        $index = 1;
-        foreach ($this->whereConditions as $condition) {
-            $stmt->bindValue($index++, $condition[2], $this->getPdoParamType($condition[2]));
-        }
-    }
-
-    protected function getPdoParamType($value)
-    {
-        if (is_int($value)) {
-            return PDO::PARAM_INT;
-        } elseif (is_bool($value)) {
-            return PDO::PARAM_BOOL;
-        } elseif (is_null($value)) {
-            return PDO::PARAM_NULL;
-        } else {
-            return PDO::PARAM_STR;
-        }
     }
 
     public function attach($relatedModel, $foreignKey = null, $relatedKey = null)
