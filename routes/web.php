@@ -8,14 +8,14 @@ use App\Controllers\CategoriaController;
 use App\Controllers\VentaController;
 use App\Middleware\AuthMiddleware;
 
-$authMiddleware = function() {
+$authMiddleware = function () {
     AuthMiddleware::handle();
 };
 
 // Rutas públicas
 $router->get('/', 'App\Controllers\HomeController@index');
 $router->post('/store', 'App\Controllers\HomeController@store');
-$router->match('GET|POST', '/login', 'App\Controllers\HomeController@login');
+// $router->match('GET|POST', '/login', 'App\Controllers\HomeController@login');
 $router->get('/register', 'App\Controllers\HomeController@register');
 $router->post('/register/user', 'App\Controllers\HomeController@registerUser');
 
@@ -50,3 +50,5 @@ $router->post('/profile/update', 'App\Controllers\UserController@updateProfile')
 ///obtener_totales
 $router->get('/obtener_totales', 'App\Controllers\HomeController@obtenerTotales');
 $router->get('/logout', 'App\Controllers\HomeController@logout');
+//login
+$router->post('/login', 'App\Controllers\HomeController@login');
