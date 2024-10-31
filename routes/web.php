@@ -47,5 +47,6 @@ $router->post('/productos/buscar', 'App\Controllers\ProductoController@buscar');
 //profile
 $router->get('/profile', 'App\Controllers\UserController@profile');
 $router->post('/profile/update', 'App\Controllers\UserController@updateProfile');
-
+///obtener_totales
+$router->get('/obtener_totales', 'App\Controllers\HomeController@obtenerTotales');
 $router->get('/logout', 'App\Controllers\HomeController@logout');
