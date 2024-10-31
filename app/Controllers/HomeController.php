@@ -8,9 +8,17 @@ use App\Lib\Controller;
 use App\Lib\Functions;
 use App\Services\AuthService;
 use App\Lib\Response;
+use App\Models\Producto;
+use App\Models\Categoria;
+use App\Models\Venta;
+use App\Lib\View;
+use Exception;
 
 class HomeController extends Controller
 {
+    public function obtenerProductos() {
+        return Producto::all(); 
+    }
 
     public function __construct()
     {
@@ -38,7 +46,26 @@ class HomeController extends Controller
         $user = new User($data);
         $user->save();
     }
-
+ // Controlador
+    public function obtenerTotales()
+    {
+        try {
+            // Obtener los totales de registros activos
+            $totalProductos = Producto::where('estado', 1)->count(); // Filtrar solo productos activos
+            $totalUsuarios = User::where('estado', 1)->count(); // Filtrar solo usuarios activos
+            $totalVentas = Venta::count(); // Ajusta esto según si las ventas tienen un estado o no
+    
+            // Devolver los datos en formato JSON
+            return Response::json([
+                'totalProductos' => $totalProductos,
+                'totalUsuarios' => $totalUsuarios,
+                'totalVentas' => $totalVentas,
+            ])->send();
+        } catch (Exception $e) { // Captura de excepciones
+            return Response::json(['error' => 'Error al obtener totales: ' . $e->getMessage()], 500)->send();
+        }
+    }
+ 
 
     // public function login()
     // {
@@ -100,6 +127,18 @@ class HomeController extends Controller
         session_destroy();
         header('Location: /');
         exit();
+    }
+    public function dashboard() {
+        // Obtener los datos necesarios para el dashboard
+        $productos = $this->obtenerProductos(); // Obtener productos
+        $categorias = $this->obtenerCategorias(); // Obtener categorías
+        
+        // Pasar los datos a la vista
+        View::render('dashboard/index', compact('productos', 'categorias'));
+    }
+// Método para obtener categorías
+    public function obtenerCategorias() {
+        return Categoria::all(); // Ajusta según tu implementación
     }
 
     //register
@@ -204,7 +243,7 @@ class HomeController extends Controller
     //     ]);
     // }
 
-    public function dashboard()
+    /*public function dashboard()
     {
         if (!isset($_SESSION['user_id'])) {
             header('Location: /login');
@@ -213,5 +252,5 @@ class HomeController extends Controller
         $users = User::all();
 
         return $this->render('admin/dashboard/index', ['users' => $users]);
-    }
+    }*/
 }
