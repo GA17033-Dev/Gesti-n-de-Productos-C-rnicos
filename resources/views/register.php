@@ -71,7 +71,7 @@
     document.addEventListener('DOMContentLoaded', function() {
         itiMovil = window.intlTelInput(document.querySelector("#examplePhone"), {
             hiddenInput: "full_number",
-            initialCountry: "co",
+            initialCountry: "sv",
             separateDialCode: true,
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@18.2.1/build/js/utils.js",
 

@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Controllers;
+
 
 use App\Models\RolesUsuario;
 use App\Models\User;
@@ -104,9 +104,8 @@ class HomeController extends Controller
                 $user = User::where('email', $email)->first();
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['user_email'] = $user->email;
-
-                // header('Location: /dashboard');
-                // exit();
+                //header('Location: /dashboard');
+                //exit();
                 return Response::json([
                     'success' => true,
                     'message' => 'Bienvenido'
@@ -199,6 +198,7 @@ class HomeController extends Controller
 
 
             // Agregar rol
+            
             $data_role = [
                 'id_usuario' => $bringUser->id,
                 'id_rol' => 2
@@ -211,9 +211,10 @@ class HomeController extends Controller
                     'message' => 'No se pudo asignar el rol al usuario'
                 ], 500)->send();
             }
+            
 
             User::commit();
-
+            
             return Response::json([
                 'success' => true,
                 'message' => 'Usuario registrado correctamente'
