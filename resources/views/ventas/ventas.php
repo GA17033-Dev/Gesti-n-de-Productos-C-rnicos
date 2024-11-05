@@ -281,7 +281,6 @@ View::section('content');
         const subtotal = productosSeleccionados.reduce((sum, p) => sum + (parseFloat(p.precio) * p.cantidad), 0);
         const descuento = parseFloat($('#discountInput').val()) || 0;
         const total = subtotal * (1 - descuento / 100);
-
         $('#subtotal').text(`$${subtotal.toFixed(2)}`);
         $('#total').text(`$${total.toFixed(2)}`);
     }
@@ -295,8 +294,6 @@ View::section('content');
             });
             return;
         }
-
-        // Validar que la cantidad seleccionada no exceda el stock disponible
         let stockExcedido = productosSeleccionados.some(producto => producto.cantidad > producto.stock);
         if (stockExcedido) {
             Swal.fire({
@@ -317,8 +314,6 @@ View::section('content');
         };
 
         console.log('Venta realizada:', venta);
-
-        //hacer la petición AJAX para guardar la venta
         $.ajax({
             url: '/ventas/store',
             type: 'POST',
@@ -327,8 +322,16 @@ View::section('content');
             },
             success: function(response) {
                 console.log('Venta realizada con éxito:', response.message);
-                mostrarMensajeVentaExitosa();
-                
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Venta realizada',
+                    text: 'La venta ha sido procesada con éxito.',
+                    showConfirmButton: false,
+                    timer: 2500,
+                    timerProgressBar: true,
+                }).then(() => {
+                    limpiarVenta();
+                });
 
             },
             error: function(error) {
@@ -341,13 +344,7 @@ View::section('content');
             }
         });
 
-        Swal.fire({
-            icon: 'success',
-            title: 'Venta realizada',
-            text: 'La venta ha sido procesada con éxito.'
-        });
 
-        limpiarVenta();
     }
 
 
