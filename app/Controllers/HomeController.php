@@ -66,28 +66,6 @@ class HomeController extends Controller
         }
     }
  
-
-    // public function login()
-    // {
-    //     if ($_SERVER['REQUEST_METHOD'] === 'POST') {
-    //         $email = $_POST['email'] ?? '';
-    //         $password = $_POST['password'] ?? '';
-
-    //         if (Functions::attempt($email, $password)) {
-    //             return Response::json([
-    //                 'success' => true,
-    //                 'message' => 'Bienvenido'
-    //             ])->send();
-    //         } else {
-    //             return Response::json([
-    //                 'success' => false,
-    //                 'message' => 'Credenciales inválidas'
-    //             ], 401)->send();
-    //         }
-    //     }
-
-    //     return $this->render('login');
-    // }
     public function login()
     {
         if (isset($_SESSION['user_id'])) {
@@ -233,25 +211,4 @@ class HomeController extends Controller
             ], 500)->send();
         }
     }
-
-    // public function dashboard()
-    // {
-    //     $users = User::all();
-
-
-    //     return $this->render('admin/dashboard/index', [
-    //         'users' => $users
-    //     ]);
-    // }
-
-    /*public function dashboard()
-    {
-        if (!isset($_SESSION['user_id'])) {
-            header('Location: /login');
-            exit();
-        }
-        $users = User::all();
-
-        return $this->render('admin/dashboard/index', ['users' => $users]);
-    }*/
 }

@@ -354,7 +354,6 @@ View::section('content');
         calcularTotal();
         $('#discountInput').val(0);
     }
-    //mostrarMensajeVentaExitosa
     function mostrarMensajeVentaExitosa() {
         Swal.fire({
             icon: 'success',
