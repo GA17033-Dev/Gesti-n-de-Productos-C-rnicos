@@ -52,3 +52,6 @@ $router->get('/obtener_totales', 'App\Controllers\HomeController@obtenerTotales'
 $router->get('/logout', 'App\Controllers\HomeController@logout');
 //login
 $router->post('/login', 'App\Controllers\HomeController@login');
+
+//ventas/store
+$router->post('/ventas/store', 'App\Controllers\VentaController@store');

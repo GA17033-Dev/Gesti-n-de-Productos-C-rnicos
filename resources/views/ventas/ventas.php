@@ -318,6 +318,29 @@ View::section('content');
 
         console.log('Venta realizada:', venta);
 
+        //hacer la petición AJAX para guardar la venta
+        $.ajax({
+            url: '/ventas/store',
+            type: 'POST',
+            data: {
+                venta: JSON.stringify(venta)
+            },
+            success: function(response) {
+                console.log('Venta realizada con éxito:', response.message);
+                mostrarMensajeVentaExitosa();
+                
+
+            },
+            error: function(error) {
+                console.error('Error en la petición AJAX:', error);
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: 'Ocurrió un error al procesar la venta.'
+                });
+            }
+        });
+
         Swal.fire({
             icon: 'success',
             title: 'Venta realizada',
@@ -333,6 +356,14 @@ View::section('content');
         actualizarTablaProductos();
         calcularTotal();
         $('#discountInput').val(0);
+    }
+    //mostrarMensajeVentaExitosa
+    function mostrarMensajeVentaExitosa() {
+        Swal.fire({
+            icon: 'success',
+            title: 'Venta realizada',
+            text: 'La venta ha sido procesada con éxito.'
+        });
     }
 </script>
 
