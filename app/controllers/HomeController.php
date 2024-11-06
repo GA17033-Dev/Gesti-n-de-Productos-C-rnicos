@@ -1,6 +1,6 @@
 <?php
-
 namespace App\Controllers;
+
 
 use App\Models\RolesUsuario;
 use App\Models\User;
@@ -9,10 +9,10 @@ use App\Lib\Functions;
 use App\Services\AuthService;
 use App\Lib\Response;
 use App\Models\Producto;
-use App\Models\Venta;
 use App\Models\Categoria;
+use App\Models\Venta;
 use App\Lib\View;
-use Exception; // Asegúrate de importar Exception
+use Exception;
 
 class HomeController extends Controller
 {
@@ -24,53 +24,66 @@ class HomeController extends Controller
     {
         parent::__construct();
     }
-
     public function index()
     {
+        if (isset($_SESSION['user_id'])) {
+            header('Location: /dashboard');
+            exit();
+        }
+
         return $this->render('login');
     }
 
-    public function dashboard() {
-        // Obtener los datos necesarios para el dashboard
-        $productos = $this->obtenerProductos(); // Obtener productos
-        $categorias = $this->obtenerCategorias(); // Obtener categorías
-        
-        // Pasar los datos a la vista
-        View::render('dashboard/index', compact('productos', 'categorias'));
-    }
 
-    // Método para obtener categorías
-    public function obtenerCategorias() {
-        return Categoria::all(); // Ajusta según tu implementación
-    }
+    public function store()
+    {
+        $data = [
+            'name' => $_POST['name'],
+            'email' => $_POST['email'],
+            'password' => Functions::encryptPassword($_POST['password'])
+        ];
 
-    // Controlador
+        $user = new User($data);
+        $user->save();
+    }
+ // Controlador
     public function obtenerTotales()
-{
-    try {
-        // Obtener los totales de registros activos
-        $totalProductos = Producto::where('estado', 1)->count(); // Filtrar solo productos activos
-        $totalUsuarios = User::where('estado', 1)->count(); // Filtrar solo usuarios activos
-        $totalVentas = Venta::count(); // Ajusta esto según si las ventas tienen un estado o no
-
-        // Devolver los datos en formato JSON
-        return Response::json([
-            'totalProductos' => $totalProductos,
-            'totalUsuarios' => $totalUsuarios,
-            'totalVentas' => $totalVentas,
-        ])->send();
-    } catch (Exception $e) { // Captura de excepciones
-        return Response::json(['error' => 'Error al obtener totales: ' . $e->getMessage()], 500)->send();
+    {
+        try {
+            // Obtener los totales de registros activos
+            $totalProductos = Producto::where('estado', 1)->count(); // Filtrar solo productos activos
+            $totalUsuarios = User::where('estado', 1)->count(); // Filtrar solo usuarios activos
+            $totalVentas = Venta::count(); // Ajusta esto según si las ventas tienen un estado o no
+    
+            // Devolver los datos en formato JSON
+            return Response::json([
+                'totalProductos' => $totalProductos,
+                'totalUsuarios' => $totalUsuarios,
+                'totalVentas' => $totalVentas,
+            ])->send();
+        } catch (Exception $e) { // Captura de excepciones
+            return Response::json(['error' => 'Error al obtener totales: ' . $e->getMessage()], 500)->send();
+        }
     }
-}
-
+ 
     public function login()
     {
+        if (isset($_SESSION['user_id'])) {
+            header('Location: /dashboard');
+            exit();
+        }
+
+
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             $email = $_POST['email'] ?? '';
             $password = $_POST['password'] ?? '';
 
             if (Functions::attempt($email, $password)) {
+                $user = User::where('email', $email)->first();
+                $_SESSION['user_id'] = $user->id;
+                $_SESSION['user_email'] = $user->email;
+                //header('Location: /dashboard');
+                //exit();
                 return Response::json([
                     'success' => true,
                     'message' => 'Bienvenido'
@@ -86,17 +99,38 @@ class HomeController extends Controller
         return $this->render('login');
     }
 
+    public function logout()
+    {
+        session_destroy();
+        header('Location: /');
+        exit();
+    }
+    public function dashboard() {
+        // Obtener los datos necesarios para el dashboard
+        $productos = $this->obtenerProductos(); // Obtener productos
+        $categorias = $this->obtenerCategorias(); // Obtener categorías
+        
+        // Pasar los datos a la vista
+        View::render('dashboard/index', compact('productos', 'categorias'));
+    }
+// Método para obtener categorías
+    public function obtenerCategorias() {
+        return Categoria::all(); // Ajusta según tu implementación
+    }
+
     //register
     public function register()
     {
+        if (isset($_SESSION['user_id'])) {
+            header('Location: /dashboard');
+            exit();
+        }
         return $this->render('register');
     }
-
     //registerUser
     public function registerUser()
     {
         try {
-            // Iniciar una transacción de base de datos
             User::beginTransaction();
 
             $data = [
@@ -111,12 +145,13 @@ class HomeController extends Controller
             ];
 
             // Verificar si el usuario ya existe
-            $existingUser = User::where('email', $data['email']);
+            $existingUser = User::where('email', $data['email'])->first();
             if ($existingUser) {
                 User::rollBack();
                 return Response::json([
                     'success' => false,
-                    'message' => 'El usuario ya existe'
+                    'message' => 'El usuario ya existe',
+                    'user' => $existingUser
                 ], 401)->send();
             }
 
@@ -129,7 +164,8 @@ class HomeController extends Controller
                 ], 500)->send();
             }
 
-            $bringUser = User::where('email', $data['email']);
+            $bringUser = User::where('email', $data['email'])->first();
+
             if (!$bringUser) {
                 User::rollBack();
                 return Response::json([
@@ -138,7 +174,9 @@ class HomeController extends Controller
                 ], 500)->send();
             }
 
+
             // Agregar rol
+            
             $data_role = [
                 'id_usuario' => $bringUser->id,
                 'id_rol' => 2
@@ -151,15 +189,15 @@ class HomeController extends Controller
                     'message' => 'No se pudo asignar el rol al usuario'
                 ], 500)->send();
             }
+            
 
-            // Si todo salió bien, confirmar la transacción
             User::commit();
-
+            
             return Response::json([
                 'success' => true,
                 'message' => 'Usuario registrado correctamente'
             ])->send();
-        } catch (\Exception $e) { // Captura de excepciones
+        } catch (\Exception $e) {
             User::rollBack();
             return Response::json([
                 'success' => false,

@@ -362,6 +362,15 @@ abstract class BaseModel extends Model implements JsonSerializable
         }, $results));
     }
 
+    public static function count()
+    {
+        $instance = new static;
+        $query = "SELECT COUNT(*) FROM {$instance->table}";
+        $stmt = $instance->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+
     public static function beginTransaction()
     {
         return self::getDb()->beginTransaction();
