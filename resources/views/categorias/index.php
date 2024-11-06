@@ -23,7 +23,7 @@ View::section('content');
         border-bottom: 0;
     }
 </style>
-<h1 class="h3 mb-4 text-gray-800 text-center">Listado de Categorias</h1>
+<h1 class="h3 mb-4 text-gray-800 text-center">Listado de Tipos de Carnes</h1>
 <div class="container-fluid">
     <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
         <div class="d-flex flex-wrap gap-2">

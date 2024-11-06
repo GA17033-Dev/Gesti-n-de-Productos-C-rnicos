@@ -79,6 +79,7 @@ class HomeController extends Controller
             $password = $_POST['password'] ?? '';
 
             if (Functions::attempt($email, $password)) {
+                
                 $user = User::where('email', $email)->first();
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['user_email'] = $user->email;
