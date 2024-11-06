@@ -469,4 +469,36 @@ abstract class BaseModel extends Model implements JsonSerializable
     {
         return parent::getDb();
     }
+    //sum
+    public static function sum($field)
+    {
+        $instance = new static;
+        $query = "SELECT SUM($field) FROM {$instance->table}";
+        $stmt = $instance->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+    //avg
+    public static function avg($field)
+    {
+        $instance = new static;
+        $query = "SELECT AVG($field) FROM {$instance->table}";
+        $stmt = $instance->prepare($query);
+        $stmt->execute();
+        return $stmt->fetchColumn();
+    }
+    //whereYear
+    public static function whereYear($field, $year)
+    {
+        $instance = new static;
+        $query = "SELECT * FROM {$instance->table} WHERE YEAR($field) = :year";
+        $stmt = $instance->prepare($query);
+        $stmt->bindValue(':year', $year);
+        $stmt->execute();
+        $results = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        return static::collection(array_map(function ($result) {
+            return (new static)->fill($result);
+        }, $results));
+    }
+    
 }

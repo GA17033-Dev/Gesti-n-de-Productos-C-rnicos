@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Controllers;
 
 
@@ -12,12 +13,14 @@ use App\Models\Producto;
 use App\Models\Categoria;
 use App\Models\Venta;
 use App\Lib\View;
+use App\Models\DetalleVenta;
 use Exception;
 
 class HomeController extends Controller
 {
-    public function obtenerProductos() {
-        return Producto::all(); 
+    public function obtenerProductos()
+    {
+        return Producto::all();
     }
 
     public function __construct()
@@ -46,26 +49,173 @@ class HomeController extends Controller
         $user = new User($data);
         $user->save();
     }
- // Controlador
+    // Controlador
+    // public function obtenerTotales()
+    // {
+    //     try {
+    //         // Obtener los totales de registros activos
+    //         $totalProductos = Producto::where('estado', 1)->count(); // Filtrar solo productos activos
+    //         $totalUsuarios = User::where('estado', 1)->count(); // Filtrar solo usuarios activos
+    //         $totalVentas = Venta::count(); // Ajusta esto según si las ventas tienen un estado o no
+
+    //         // Devolver los datos en formato JSON
+    //         return Response::json([
+    //             'totalProductos' => $totalProductos,
+    //             'totalUsuarios' => $totalUsuarios,
+    //             'totalVentas' => $totalVentas,
+    //         ])->send();
+    //     } catch (Exception $e) { // Captura de excepciones
+    //         return Response::json(['error' => 'Error al obtener totales: ' . $e->getMessage()], 500)->send();
+    //     }
+    // }
     public function obtenerTotales()
     {
         try {
-            // Obtener los totales de registros activos
-            $totalProductos = Producto::where('estado', 1)->count(); // Filtrar solo productos activos
-            $totalUsuarios = User::where('estado', 1)->count(); // Filtrar solo usuarios activos
-            $totalVentas = Venta::count(); // Ajusta esto según si las ventas tienen un estado o no
-    
-            // Devolver los datos en formato JSON
+            // Totales básicos
+            $totalProductos = Producto::where('estado', 1)->get();
+            $totalProductosCount = count($totalProductos);
+
+            $totalUsuarios = User::where('estado', 1)->get();
+            $totalUsuariosCount = count($totalUsuarios);
+
+            $totalVentas = Venta::where('estado', 1)->get();
+            $totalVentasCount = count($totalVentas);
+
+            // Ventas por categoría
+            $categorias = Categoria::all();
+            $ventasPorCategoria = [];
+
+            foreach ($categorias as $categoria) {
+                $total = 0;
+                $productos = Producto::where('id_categoria', '=', $categoria['id'])->get();
+
+                foreach ($productos as $producto) {
+                    $detallesVenta = DetalleVenta::where('id_producto', '=', $producto['id'])->get();
+                    foreach ($detallesVenta as $detalle) {
+                        $total += floatval($detalle['subtotal']);
+                    }
+                }
+
+                if ($total > 0) {
+                    $ventasPorCategoria[] = [
+                        'nombre' => $categoria['nombre'],
+                        'total' => $total
+                    ];
+                }
+            }
+
+            // Ventas mensuales
+            $ventasMensuales = [];
+            $año_actual = date('Y');
+            $ventas = Venta::where('estado', '=', 1)->get();
+
+            foreach ($ventas as $venta) {
+                if (!empty($venta['fecha'])) {
+                    $fecha_venta = strtotime($venta['fecha']);
+                    $mes = date('n', $fecha_venta);
+                    $año = date('Y', $fecha_venta);
+
+                    if ($año == $año_actual) {
+                        if (!isset($ventasMensuales[$mes])) {
+                            $ventasMensuales[$mes] = [
+                                'mes' => $mes,
+                                'total' => 0,
+                                'monto' => 0
+                            ];
+                        }
+                        $ventasMensuales[$mes]['total']++;
+                        $ventasMensuales[$mes]['monto'] += floatval($venta['total_final']);
+                    }
+                }
+            }
+
+            // Convertir a array indexado y ordenar por mes
+            $ventasMensuales = array_values($ventasMensuales);
+            usort($ventasMensuales, function ($a, $b) {
+                return $a['mes'] - $b['mes'];
+            });
+
+            // Productos más vendidos
+            $productos = Producto::all();
+            $productosMasVendidos = [];
+
+            foreach ($productos as $producto) {
+                $totalVendido = 0;
+                $detallesVenta = DetalleVenta::where('id_producto', '=', $producto['id'])->get();
+
+                foreach ($detallesVenta as $detalle) {
+                    $totalVendido += intval($detalle['cantidad']);
+                }
+
+                if ($totalVendido > 0) {
+                    $productosMasVendidos[] = [
+                        'nombre' => $producto['nombre'],
+                        'total_vendido' => $totalVendido
+                    ];
+                }
+            }
+
+            // Ordenar productos más vendidos y tomar los 5 primeros
+            usort($productosMasVendidos, function ($a, $b) {
+                return $b['total_vendido'] - $a['total_vendido'];
+            });
+            $productosMasVendidos = array_slice($productosMasVendidos, 0, 5);
+
+            // Calcular monto total de ventas
+            $montoTotalVentas = 0;
+            foreach ($ventas as $venta) {
+                if ($venta['estado'] == 1) {
+                    $montoTotalVentas += floatval($venta['total_final']);
+                }
+            }
+
+            // Calcular promedio de venta diaria
+            $ventasHoy = array_filter($ventas, function ($venta) {
+                return !empty($venta['fecha']) &&
+                    $venta['fecha'] == date('Y-m-d') &&
+                    $venta['estado'] == 1;
+            });
+
+            $promedioVentaDiaria = 0;
+            if (count($ventasHoy) > 0) {
+                $totalHoy = array_sum(array_map(function ($venta) {
+                    return floatval($venta['total_final']);
+                }, $ventasHoy));
+                $promedioVentaDiaria = $totalHoy / count($ventasHoy);
+            }
+
+            // Ventas última semana
+            $fechaUltimaSemana = date('Y-m-d', strtotime('-7 days'));
+            $ventasUltimaSemana = array_filter($ventas, function ($venta) use ($fechaUltimaSemana) {
+                return !empty($venta['fecha']) &&
+                    $venta['fecha'] >= $fechaUltimaSemana &&
+                    $venta['estado'] == 1;
+            });
+            $totalVentasUltimaSemana = count($ventasUltimaSemana);
+
             return Response::json([
-                'totalProductos' => $totalProductos,
-                'totalUsuarios' => $totalUsuarios,
-                'totalVentas' => $totalVentas,
+                'success' => true,
+                'data' => [
+                    'totalProductos' => $totalProductosCount,
+                    'totalUsuarios' => $totalUsuariosCount,
+                    'totalVentas' => $totalVentasCount,
+                    'ventasPorCategoria' => $ventasPorCategoria,
+                    'ventasMensuales' => $ventasMensuales,
+                    'productosMasVendidos' => $productosMasVendidos,
+                    'montoTotalVentas' => $montoTotalVentas,
+                    'promedioVentaDiaria' => number_format($promedioVentaDiaria, 2),
+                    'ventasUltimaSemana' => $totalVentasUltimaSemana
+                ]
             ])->send();
-        } catch (Exception $e) { // Captura de excepciones
-            return Response::json(['error' => 'Error al obtener totales: ' . $e->getMessage()], 500)->send();
+        } catch (Exception $e) {
+            return Response::json([
+                'success' => false,
+                'message' => 'Error al obtener totales: ' . $e->getMessage()
+            ], 500)->send();
         }
     }
- 
+
+
     public function login()
     {
         if (isset($_SESSION['user_id'])) {
@@ -105,16 +255,18 @@ class HomeController extends Controller
         header('Location: /');
         exit();
     }
-    public function dashboard() {
+    public function dashboard()
+    {
         // Obtener los datos necesarios para el dashboard
         $productos = $this->obtenerProductos(); // Obtener productos
         $categorias = $this->obtenerCategorias(); // Obtener categorías
-        
+
         // Pasar los datos a la vista
         View::render('dashboard/index', compact('productos', 'categorias'));
     }
-// Método para obtener categorías
-    public function obtenerCategorias() {
+    // Método para obtener categorías
+    public function obtenerCategorias()
+    {
         return Categoria::all(); // Ajusta según tu implementación
     }
 
@@ -176,7 +328,7 @@ class HomeController extends Controller
 
 
             // Agregar rol
-            
+
             $data_role = [
                 'id_usuario' => $bringUser->id,
                 'id_rol' => 2
@@ -189,10 +341,10 @@ class HomeController extends Controller
                     'message' => 'No se pudo asignar el rol al usuario'
                 ], 500)->send();
             }
-            
+
 
             User::commit();
-            
+
             return Response::json([
                 'success' => true,
                 'message' => 'Usuario registrado correctamente'

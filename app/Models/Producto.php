@@ -22,4 +22,9 @@ class Producto extends BaseModel
     {
         return $this->belongsTo(Categoria::class, 'id_categoria');
     }
+    //detalleVentas\
+    public function detalleVentas()
+    {
+        return $this->hasMany(DetalleVenta::class, 'id_producto');
+    }
 }
