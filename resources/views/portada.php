@@ -145,9 +145,7 @@ View::section('content');
     }
 
     @media screen and (max-width: 768px) {
-        body {
-            padding: 1rem;
-        }
+      
 
        .contenedor {
             padding: 1rem;
