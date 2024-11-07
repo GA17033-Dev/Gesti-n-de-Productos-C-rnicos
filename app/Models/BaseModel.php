@@ -444,7 +444,7 @@ abstract class BaseModel extends Model implements JsonSerializable
     public static function count()
     {
         $instance = new static;
-        $query = "SELECT COUNT(*) FROM {$instance->table}";
+        $query = "SELECT COUNT(*) FROM {$instance->table}  WHERE estado = 1";
         $stmt = $instance->prepare($query);
         $stmt->execute();
         return $stmt->fetchColumn();
