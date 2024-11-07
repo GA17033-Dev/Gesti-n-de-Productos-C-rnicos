@@ -1,4 +1,5 @@
 <?php
+
 use App\Lib\View;
 
 View::extends('layout/layout');
@@ -10,63 +11,20 @@ View::endSection('title');
 View::section('styles');
 ?>
 <style>
-    .dashboard-card {
-        transition: transform 0.2s ease-in-out;
-        height: 100%;
-    }
-    
-    .dashboard-card:hover {
-        transform: translateY(-5px);
-    }
-    
-    .stat-card {
-        border-radius: 15px;
-        border: none;
-        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    }
-    
-    .stat-value {
-        font-size: 2.5rem;
-        font-weight: bold;
-    }
-    
     .chart-container {
         position: relative;
-        min-height: 300px;
+        height: 300px !important;
         margin-bottom: 1rem;
+        width: 100% !important;
     }
-    
-    .card-header {
-        background-color: #f8f9fc;
-        border-bottom: 1px solid #e3e6f0;
+
+    .card-body {
+        height: auto !important;
+        overflow: hidden;
     }
-    
-    .summary-table td {
-        padding: 1rem;
-        vertical-align: middle;
-    }
-    
-    .loading-overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        right: 0;
-        bottom: 0;
-        background: rgba(255, 255, 255, 0.8);
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-    
-    @media (max-width: 768px) {
-        .stat-value {
-            font-size: 2rem;
-        }
-        
-        .chart-container {
-            min-height: 250px;
-        }
+
+    #ventasPorCategoriaChart {
+        max-height: 300px !important;
     }
 </style>
 <?php View::endSection('styles');
@@ -94,7 +52,7 @@ View::section('content');
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card stat-card text-white bg-success h-100">
                 <div class="card-body d-flex flex-column align-items-center">
@@ -110,7 +68,7 @@ View::section('content');
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card stat-card text-white bg-warning h-100">
                 <div class="card-body d-flex flex-column align-items-center">
@@ -126,7 +84,7 @@ View::section('content');
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-sm-6 col-xl-3">
             <div class="card dashboard-card stat-card text-white bg-info h-100">
                 <div class="card-body d-flex flex-column align-items-center">
@@ -165,7 +123,7 @@ View::section('content');
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-xl-6">
             <div class="card dashboard-card shadow h-100">
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -185,7 +143,7 @@ View::section('content');
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-xl-6">
             <div class="card dashboard-card shadow h-100">
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -205,7 +163,7 @@ View::section('content');
                 </div>
             </div>
         </div>
-        
+
         <div class="col-12 col-xl-6">
             <div class="card dashboard-card shadow h-100">
                 <div class="card-header py-3 d-flex justify-content-between align-items-center">
@@ -271,14 +229,14 @@ View::section('scripts');
     let ventasMensualesChart;
     let ventasPorCategoriaChart;
     let productosMasVendidosChart;
-    
+
     function formatCurrency(value) {
         return new Intl.NumberFormat('es-PE', {
             style: 'currency',
             currency: 'PEN'
         }).format(value);
     }
-    
+
     function toggleLoadingOverlay(show) {
         const overlays = document.querySelectorAll('.loading-overlay');
         overlays.forEach(overlay => {
@@ -296,11 +254,24 @@ View::section('scripts');
                     labels: {
                         padding: 20,
                         usePointStyle: true,
+                        boxWidth: 10,
+                        font: {
+                            size: 12
+                        }
                     }
+                }
+            },
+            layout: {
+                padding: {
+                    left: 10,
+                    right: 10,
+                    top: 10,
+                    bottom: 10
                 }
             }
         };
 
+        // Actualiza las opciones específicas para cada gráfico
         ventasMensualesChart = new Chart(document.getElementById('ventasMensualesChart'), {
             type: 'line',
             data: {
@@ -327,7 +298,10 @@ View::section('scripts');
                         beginAtZero: true,
                         title: {
                             display: true,
-                            text: 'Cantidad de Ventas'
+                            text: 'Cantidad de Ventas',
+                            font: {
+                                size: 12
+                            }
                         }
                     },
                     y1: {
@@ -335,16 +309,27 @@ View::section('scripts');
                         position: 'right',
                         title: {
                             display: true,
-                            text: 'Monto de Ventas'
+                            text: 'Monto de Ventas',
+                            font: {
+                                size: 12
+                            }
                         },
                         grid: {
                             drawOnChartArea: false
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
                         }
                     }
                 }
             }
         });
 
+        // Gráfico de dona con tamaño controlado
         ventasPorCategoriaChart = new Chart(document.getElementById('ventasPorCategoriaChart'), {
             type: 'doughnut',
             data: {
@@ -363,9 +348,12 @@ View::section('scripts');
             },
             options: {
                 ...commonOptions,
-                cutout: '70%'
+                cutout: '70%',
+                radius: '90%' // Controla el tamaño del dona
             }
         });
+
+        // Gráfico de barras con altura controlada
         productosMasVendidosChart = new Chart(document.getElementById('productosMasVendidosChart'), {
             type: 'bar',
             data: {
@@ -382,17 +370,32 @@ View::section('scripts');
                 ...commonOptions,
                 scales: {
                     y: {
-                        beginAtZero: true
+                        beginAtZero: true,
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        }
+                    },
+                    x: {
+                        ticks: {
+                            font: {
+                                size: 12
+                            }
+                        }
                     }
-                }
+                },
+                barThickness: 'flex',
+                maxBarThickness: 30
             }
         });
     }
 
     function updateCharts(data) {
-        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
-                      'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-    
+        const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio',
+            'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'
+        ];
+
         const labels = data.ventasMensuales.map(item => meses[item.mes - 1]);
         const cantidades = data.ventasMensuales.map(item => item.total);
         const montos = data.ventasMensuales.map(item => item.monto);
@@ -404,7 +407,7 @@ View::section('scripts');
         ventasPorCategoriaChart.data.labels = data.ventasPorCategoria.map(item => item.nombre);
         ventasPorCategoriaChart.data.datasets[0].data = data.ventasPorCategoria.map(item => item.total);
         ventasPorCategoriaChart.update();
-        productosMasVendidosChart.data.labels = data.productosMasVendidos.map(item => 
+        productosMasVendidosChart.data.labels = data.productosMasVendidos.map(item =>
             item.nombre.length > 20 ? item.nombre.substring(0, 20) + '...' : item.nombre
         );
         productosMasVendidosChart.data.datasets[0].data = data.productosMasVendidos.map(item => item.total_vendido);
@@ -413,7 +416,7 @@ View::section('scripts');
 
     function actualizarDatos() {
         toggleLoadingOverlay(true);
-        
+
         $.ajax({
             url: '/obtener_totales',
             type: 'GET',
@@ -431,31 +434,32 @@ View::section('scripts');
                     Object.entries(cards).forEach(([id, value]) => {
                         const element = $(`#${id}`);
                         const currentValue = parseInt(element.text()) || 0;
-                        $({ value: currentValue }).animate(
-                            { value: value },
-                            {
-                                duration: 1000,
-                                step: function(now) {
-                                    element.text(Math.round(now));
-                                }
+                        $({
+                            value: currentValue
+                        }).animate({
+                            value: value
+                        }, {
+                            duration: 1000,
+                            step: function(now) {
+                                element.text(Math.round(now));
                             }
-                        );
+                        });
                     });
-                    
+
                     $('#montoTotalVentas').html(`
                         <span class="text-success fw-bold">
                             ${formatCurrency(data.montoTotalVentas)}
                         </span>
                     `);
-                    
+
                     $('#promedioVentaDiaria').html(`
                         <span class="text-primary fw-bold">
                             ${formatCurrency(data.promedioVentaDiaria)}
                         </span>
                     `);
-                    
+
                     updateCharts(data);
-                    
+
                     showToast('Datos actualizados correctamente');
                 } else {
                     showError('Error al cargar los datos');
@@ -486,11 +490,11 @@ View::section('scripts');
                 </div>
             </div>
         `);
-        
+
         $('body').append(toast);
         const toastElement = new bootstrap.Toast(toast.find('.toast')[0]);
         toastElement.show();
-        
+
         setTimeout(() => {
             toast.remove();
         }, 3000);
@@ -504,21 +508,28 @@ View::section('scripts');
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         `);
-        
+
         $('.container-fluid').prepend(alert);
-        
+
         setTimeout(() => {
             alert.alert('close');
         }, 5000);
     }
 
+    function handleResize() {
+        if (ventasMensualesChart) ventasMensualesChart.resize();
+        if (ventasPorCategoriaChart) ventasPorCategoriaChart.resize();
+        if (productosMasVendidosChart) productosMasVendidosChart.resize();
+    }
+
     $(document).ready(function() {
         initializeCharts();
         actualizarDatos();
-        
+        window.addEventListener('resize', handleResize);
         setInterval(actualizarDatos, 30000);
-        
+
         $('[data-bs-toggle="tooltip"]').tooltip();
+
     });
 </script>
 
