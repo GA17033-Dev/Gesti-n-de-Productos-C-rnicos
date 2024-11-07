@@ -362,4 +362,9 @@ class HomeController extends Controller
             ], 500)->send();
         }
     }
+
+    public function portada()
+    {
+        return $this->render('portada');
+    }
 }

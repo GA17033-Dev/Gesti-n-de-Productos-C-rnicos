@@ -55,3 +55,5 @@ $router->post('/login', 'App\Controllers\HomeController@login');
 
 //ventas/store
 $router->post('/ventas/store', 'App\Controllers\VentaController@store');
+//portada
+$router->get('/portada', 'App\Controllers\HomeController@portada');
