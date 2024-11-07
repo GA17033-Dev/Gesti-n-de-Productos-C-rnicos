@@ -300,7 +300,6 @@ View::section('scripts');
             }
         };
 
-        // Ventas Mensuales Chart
         ventasMensualesChart = new Chart(document.getElementById('ventasMensualesChart'), {
             type: 'line',
             data: {
@@ -345,7 +344,6 @@ View::section('scripts');
             }
         });
 
-        // Ventas por Categoría Chart
         ventasPorCategoriaChart = new Chart(document.getElementById('ventasPorCategoriaChart'), {
             type: 'doughnut',
             data: {
@@ -367,8 +365,6 @@ View::section('scripts');
                 cutout: '70%'
             }
         });
-
-        // Productos Más Vendidos Chart
         productosMasVendidosChart = new Chart(document.getElementById('productosMasVendidosChart'), {
             type: 'bar',
             data: {
@@ -395,10 +391,7 @@ View::section('scripts');
     function updateCharts(data) {
         const meses = ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio', 
                       'Julio', 'Agosto', 'Septiembre', 'Octubre', 'Noviembre', 'Diciembre'];
-        
-        // Actualizar Ventas Mensuales
-        
-        // Actualizar Ventas Mensuales
+    
         const labels = data.ventasMensuales.map(item => meses[item.mes - 1]);
         const cantidades = data.ventasMensuales.map(item => item.total);
         const montos = data.ventasMensuales.map(item => item.monto);
@@ -407,13 +400,9 @@ View::section('scripts');
         ventasMensualesChart.data.datasets[0].data = cantidades;
         ventasMensualesChart.data.datasets[1].data = montos;
         ventasMensualesChart.update();
-
-        // Actualizar Ventas por Categoría
         ventasPorCategoriaChart.data.labels = data.ventasPorCategoria.map(item => item.nombre);
         ventasPorCategoriaChart.data.datasets[0].data = data.ventasPorCategoria.map(item => item.total);
         ventasPorCategoriaChart.update();
-
-        // Actualizar Productos Más Vendidos
         productosMasVendidosChart.data.labels = data.productosMasVendidos.map(item => 
             item.nombre.length > 20 ? item.nombre.substring(0, 20) + '...' : item.nombre
         );
@@ -431,8 +420,6 @@ View::section('scripts');
             success: function(response) {
                 if (response.success) {
                     const data = response.data;
-                    
-                    // Actualizar cards con animación
                     const cards = {
                         totalProductos: data.totalProductos,
                         totalUsuarios: data.totalUsuarios,
@@ -454,7 +441,6 @@ View::section('scripts');
                         );
                     });
                     
-                    // Actualizar tabla de resumen con animación
                     $('#montoTotalVentas').html(`
                         <span class="text-success fw-bold">
                             ${formatCurrency(data.montoTotalVentas)}
@@ -467,10 +453,8 @@ View::section('scripts');
                         </span>
                     `);
                     
-                    // Actualizar gráficos
                     updateCharts(data);
                     
-                    // Mostrar mensaje de actualización
                     showToast('Datos actualizados correctamente');
                 } else {
                     showError('Error al cargar los datos');
@@ -527,15 +511,12 @@ View::section('scripts');
         }, 5000);
     }
 
-    // Inicializar cuando el documento esté listo
     $(document).ready(function() {
         initializeCharts();
         actualizarDatos();
         
-        // Actualizar datos cada 30 segundos
         setInterval(actualizarDatos, 30000);
         
-        // Añadir tooltip a los iconos de actualización
         $('[data-bs-toggle="tooltip"]').tooltip();
     });
 </script>
