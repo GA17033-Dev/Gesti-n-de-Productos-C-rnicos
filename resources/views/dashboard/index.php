@@ -526,7 +526,7 @@ View::section('scripts');
         initializeCharts();
         actualizarDatos();
         window.addEventListener('resize', handleResize);
-        setInterval(actualizarDatos, 30000);
+        //setInterval(actualizarDatos, 30000);
 
         $('[data-bs-toggle="tooltip"]').tooltip();
 
