@@ -71,7 +71,7 @@ class HomeController extends Controller
     public function obtenerTotales()
     {
         try {
-            // Totales básicos
+
             $totalProductos = Producto::where('estado', 1)->get();
             $totalProductosCount = count($totalProductos);
 
@@ -104,7 +104,7 @@ class HomeController extends Controller
                 }
             }
 
-            // Ventas mensuales
+
             $ventasMensuales = [];
             $año_actual = date('Y');
             $ventas = Venta::where('estado', '=', 1)->get();
@@ -129,13 +129,13 @@ class HomeController extends Controller
                 }
             }
 
-            // Convertir a array indexado y ordenar por mes
+     
             $ventasMensuales = array_values($ventasMensuales);
             usort($ventasMensuales, function ($a, $b) {
                 return $a['mes'] - $b['mes'];
             });
 
-            // Productos más vendidos
+
             $productos = Producto::all();
             $productosMasVendidos = [];
 
@@ -155,13 +155,12 @@ class HomeController extends Controller
                 }
             }
 
-            // Ordenar productos más vendidos y tomar los 5 primeros
             usort($productosMasVendidos, function ($a, $b) {
                 return $b['total_vendido'] - $a['total_vendido'];
             });
             $productosMasVendidos = array_slice($productosMasVendidos, 0, 5);
 
-            // Calcular monto total de ventas
+
             $montoTotalVentas = 0;
             foreach ($ventas as $venta) {
                 if ($venta['estado'] == 1) {
@@ -169,7 +168,7 @@ class HomeController extends Controller
                 }
             }
 
-            // Calcular promedio de venta diaria
+      
             $ventasHoy = array_filter($ventas, function ($venta) {
                 return !empty($venta['fecha']) &&
                     $venta['fecha'] == date('Y-m-d') &&
@@ -184,7 +183,7 @@ class HomeController extends Controller
                 $promedioVentaDiaria = $totalHoy / count($ventasHoy);
             }
 
-            // Ventas última semana
+
             $fechaUltimaSemana = date('Y-m-d', strtotime('-7 days'));
             $ventasUltimaSemana = array_filter($ventas, function ($venta) use ($fechaUltimaSemana) {
                 return !empty($venta['fecha']) &&
