@@ -8,12 +8,12 @@ View::section('title');
 echo 'Dashboard - Administración';
 View::endSection('title');
 
-View::section('styles');
+View::section('content');
 ?>
 <style>
     .chart-container {
         position: relative;
-        height: 300px !important;
+        height: 250px !important; 
         margin-bottom: 1rem;
         width: 100% !important;
     }
@@ -21,16 +21,34 @@ View::section('styles');
     .card-body {
         height: auto !important;
         overflow: hidden;
+        padding: 0.8rem !important; 
     }
 
     #ventasPorCategoriaChart {
-        max-height: 300px !important;
+        max-height: 250px !important;
+    }
+
+ 
+    .dashboard-card {
+        margin-bottom: 1rem;
+    }
+
+
+    .card-header {
+        padding: 0.5rem 1rem !important; 
+    }
+
+
+    .chart-container canvas {
+        max-height: 100%;
+    }
+
+    @media (max-width: 768px) {
+        .chart-container {
+            height: 200px !important;
+        }
     }
 </style>
-<?php View::endSection('styles');
-
-View::section('content');
-?>
 
 <div class="container-fluid py-4">
     <h1 class="h3 mb-4 text-gray-800 text-center">Panel de Control</h1>
@@ -252,26 +270,24 @@ View::section('scripts');
                 legend: {
                     position: 'bottom',
                     labels: {
-                        padding: 20,
+                        padding: 4,
                         usePointStyle: true,
-                        boxWidth: 10,
+                        boxWidth: 6,
                         font: {
-                            size: 12
+                            size: 9
                         }
                     }
                 }
             },
             layout: {
                 padding: {
-                    left: 10,
-                    right: 10,
-                    top: 10,
-                    bottom: 10
+                    left: 2,
+                    right: 2,
+                    top: 2,
+                    bottom: 2
                 }
             }
         };
-
-        // Actualiza las opciones específicas para cada gráfico
         ventasMensualesChart = new Chart(document.getElementById('ventasMensualesChart'), {
             type: 'line',
             data: {
@@ -348,12 +364,11 @@ View::section('scripts');
             },
             options: {
                 ...commonOptions,
-                cutout: '70%',
-                radius: '90%' // Controla el tamaño del dona
+                cutout: '60%',
+                radius: '70%'
             }
         });
 
-        // Gráfico de barras con altura controlada
         productosMasVendidosChart = new Chart(document.getElementById('productosMasVendidosChart'), {
             type: 'bar',
             data: {
@@ -373,14 +388,14 @@ View::section('scripts');
                         beginAtZero: true,
                         ticks: {
                             font: {
-                                size: 12
+                                size: 9
                             }
                         }
                     },
                     x: {
                         ticks: {
                             font: {
-                                size: 12
+                                size: 9
                             }
                         }
                     }
