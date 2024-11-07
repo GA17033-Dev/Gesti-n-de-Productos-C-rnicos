@@ -57,3 +57,5 @@ $router->post('/login', 'App\Controllers\HomeController@login');
 $router->post('/ventas/store', 'App\Controllers\VentaController@store');
 //portada
 $router->get('/portada', 'App\Controllers\HomeController@portada');
+///profile/update-security
+$router->post('/profile/update-security', 'App\Controllers\UserController@updateSecurity');

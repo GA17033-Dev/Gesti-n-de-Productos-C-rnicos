@@ -4,7 +4,10 @@ namespace App\Controllers;
 
 use App\Lib\Controller;
 use App\Lib\Response;
+use App\Models\Rol;
+use App\Models\RolesUsuario;
 use App\Models\User;
+use App\Models\Venta;
 
 class UserController extends Controller
 {
@@ -23,10 +26,17 @@ class UserController extends Controller
     public function profile()
     {
         $user = User::find($_SESSION['user_id']);
+       
 
-        return $this->render('users/profile', ['user' => $user]);
+        $ventas = Venta::where('id_usuario', $_SESSION['user_id'])->get();
+        $totalVentas = 0;
+
+        foreach ($ventas as $venta) {
+            $totalVentas++;
+        }
+
+        return $this->render('users/profile', ['user' => $user, 'totalVentas' => $totalVentas]);
     }
-    //updateProfile
     public function updateProfile()
     {
         try {
@@ -49,6 +59,30 @@ class UserController extends Controller
             return Response::json([
                 'success' => true,
                 'message' => 'Perfil actualizado'
+            ])->send();
+        } catch (\Exception $e) {
+            return Response::json([
+                'success' => false,
+                'message' => $e->getMessage()
+            ], 500)->send();
+        }
+    }
+    public function updateSecurity()
+    {
+        try {
+            $user = User::find($_SESSION['user_id']);
+            if (!password_verify($_POST['current_password'], $user->password)) {
+                return Response::json([
+                    'success' => false,
+                    'message' => 'Contraseña incorrecta'
+                ], 400)->send();
+            }
+            $user->password = password_hash($_POST['new_password'], PASSWORD_DEFAULT);
+            $user->save();
+
+            return Response::json([
+                'success' => true,
+                'message' => 'Contraseña actualizada'
             ])->send();
         } catch (\Exception $e) {
             return Response::json([
