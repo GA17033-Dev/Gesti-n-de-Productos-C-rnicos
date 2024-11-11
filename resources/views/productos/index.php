@@ -31,6 +31,11 @@ View::section('content');
                 <i class="fas fa-plus"></i>
                 Agregar Producto
             </button>
+            <!-- Botón para exportar a PDF -->
+            <button type="button" class="btn btn-danger btn-sm flex-grow-1 flex-md-grow-0" onclick="exportTableToPDF()" title="Exportar a PDF">
+                <i class="fas fa-file-pdf"></i>
+                Exportar a PDF
+            </button>
             <!--exportar en excel-->
             <button type="button" class="btn btn-success btn-sm flex-grow-1 flex-md-grow-0" onclick="exportTableToExcel('users', 'productos')" title="Exportar a Excel">
                 <i class="fas fa-file-excel"></i>
@@ -176,6 +181,63 @@ View::section('scripts');
 ?>
 
 <script>
+    const exportTableToPDF = () => {
+        // Usar jsPDF para generar el PDF
+        const { jsPDF } = window.jspdf;
+        const doc = new jsPDF('landscape');  // Establecer la orientación horizontal (landscape)
+
+        // Obtener los datos de la tabla
+        const table = document.getElementById('users');
+        const rows = Array.from(table.rows);
+
+        const tableData = rows.map(row => {
+            const columns = Array.from(row.cells).map(cell => cell.innerText);
+            return columns;
+        });
+
+        // Excluir la fila de encabezado
+        const tableHeaders = tableData.shift();
+
+        // Añadir los encabezados al PDF
+        doc.text('Reporte de Productos', 297 / 2, 10, null, null, 'center');  // Título centrado en el documento
+
+        doc.autoTable({
+            head: [tableHeaders],
+            body: tableData,
+            margin: { top: 20 },
+            theme: 'striped',  // Puedes cambiarlo a 'grid', 'plain', o 'striped'
+            styles: {
+                fontSize: 10,              // Tamaño de la fuente
+                cellPadding: 5,            // Espaciado entre celdas
+                halign: 'center',          // Alineación horizontal (center, left, right)
+                valign: 'middle',          // Alineación vertical (top, middle, bottom)
+                font: 'helvetica',         // Tipo de letra
+                lineColor: [44, 62, 80],   // Color de la línea
+                lineWidth: 0.5             // Grosor de la línea
+            },
+            headStyles: {
+                fillColor: [44, 62, 80],   // Color de fondo para los encabezados
+                textColor: [255, 255, 255] // Color del texto en los encabezados
+            },
+            bodyStyles: {
+                fillColor: [255, 255, 255], // Color de fondo de las filas (puedes alternarlo si deseas)
+                textColor: [0, 0, 0]         // Color de texto de las filas
+            },
+            columnStyles: {
+                0: { cellWidth: 40 },  // Establece el ancho de la primera columna
+                1: { cellWidth: 'auto' }, // Ajuste automático para la segunda columna
+                2: { cellWidth: 50 }, // Establece un ancho fijo para la tercera columna
+                3: { cellWidth: 30 }, // Establece el ancho de la cuarta columna
+                4: { cellWidth: 30 }, // Establece el ancho de la quinta columna
+                5: { cellWidth: 30 }, // Establece el ancho de la sexta columna
+                6: { cellWidth: 40 }  // Establece el ancho de la séptima columna
+            },
+            showHead: 'everyPage',  // Mostrar encabezado en todas las páginas (en caso de que se necesite más de una página)
+        });
+
+        // Descargar el archivo PDF
+        doc.save('productos.pdf');
+    }
     $(document).ready(function() {
         $('#users').DataTable({
             "language": {
@@ -205,7 +267,6 @@ View::section('scripts');
             paginate: true,
         });
     });
-
     const guardarProducto = () => {
         const nombre = document.getElementById('nombre').value;
         const categoria = document.getElementById('categoria').value;

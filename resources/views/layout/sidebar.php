@@ -15,6 +15,8 @@
             <!--roles y permisos-->
             <li class="nav-item"><a class="nav-link" href="roles"><i class="fas fa-user-shield"></i><span>Roles</span></a></li>
             <li class="nav-item"><a class="nav-link" href="ventas"><i class="fas fa-chart-line"></i><span>Ventas</span></a></li>
+            <!--portada-->
+            <li class="nav-item"><a class="nav-link" href="portada"><i class="fas fa-home"></i><span>Portada</span></a></li>
             <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i><span>Estadisticas</span></a></li> -->
 
         </ul>
