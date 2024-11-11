@@ -2,6 +2,8 @@
 
 namespace App\Lib;
 
+use App\Models\Rol;
+use App\Models\RolesUsuario;
 use App\Models\User;
 
 class Functions
@@ -33,6 +35,14 @@ class Functions
         return false;
     }
 
+    public static function attemptRol($user_id)
+    {
+        $user_rol = RolesUsuario::where('id_usuario', $user_id)->first();
+        
+            $_SESSION['user_rol'] = $user_rol->id_rol;
+            return true;
+        
+    }
     public function check()
     {
         return isset($_SESSION['user_id']);
@@ -46,7 +56,7 @@ class Functions
         return null;
     }
 
-    public function logout()
+    public function logout(): void
     {
         unset($_SESSION['user_id']);
         session_destroy();

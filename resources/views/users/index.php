@@ -31,6 +31,7 @@ View::section('content');
                 <tr>
                     <th>Nombre</th>
                     <th>Email</th>
+                    <th>Nombre de Usuario</th>
                     <th>Telefono</th>
                     <th>Acciones</th>
                 </tr>
@@ -40,6 +41,7 @@ View::section('content');
                     <tr>
                         <td data-label="Nombre"><?= $user['nombre'] . ' ' . $user['apellido'] ?></td>
                         <td data-label="Email"><?= $user['email'] ?? '' ?></td>
+                        <td data-label="Usuario"><?= $user['username'] ?? '' ?></td>
                         <td data-label="Telefono"><?= $user['telefono'] ?? '' ?></td>
                         <td data-label="Acciones">
                             <button class="btn btn-sm btn-primary" href="#"><i class="fas fa-edit"></i></button>

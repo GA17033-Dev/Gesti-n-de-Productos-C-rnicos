@@ -27,8 +27,13 @@ class HomeController extends Controller
     public function index()
     {
         if (isset($_SESSION['user_id'])) {
-            header('Location: /dashboard');
-            exit();
+            $user_rol = $_SESSION['user_rol'];
+            if($user_rol==1){
+                header('Location: /dashboard');
+            }else{
+                header('Location: /ventas');
+            }
+            //exit();
         }
 
         return $this->render('login');
@@ -90,10 +95,10 @@ class HomeController extends Controller
     // }
     public function login()
     {
-        if (isset($_SESSION['user_id'])) {
+        /*if (isset($_SESSION['user_id'])) {
             header('Location: /dashboard');
             exit();
-        }
+        }*/
 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -104,8 +109,17 @@ class HomeController extends Controller
                 $user = User::where('email', $email)->first();
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['user_email'] = $user->email;
-                //header('Location: /dashboard');
-                //exit();
+                
+            // buscar rol
+            
+                //se envia el id_usuario y se comprueba que 
+                Functions::attemptRol($_SESSION['user_id']);
+
+                //si el rol es 1, pasa a dashboard
+
+                //si el rol es 2, pasa a pVentas
+
+
                 return Response::json([
                     'success' => true,
                     'message' => 'Bienvenido'
