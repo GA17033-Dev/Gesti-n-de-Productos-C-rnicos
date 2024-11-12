@@ -59,3 +59,10 @@ $router->post('/ventas/store', 'App\Controllers\VentaController@store');
 $router->get('/portada', 'App\Controllers\HomeController@portada');
 ///profile/update-security
 $router->post('/profile/update-security', 'App\Controllers\UserController@updateSecurity');
+// Ruta para ver el reporte de ventas por tipo de carne
+$router->get('/reportes/ventas-tipo-carne', 'App\Controllers\ReporteController@ventasPorTipoCarne');
+// Ruta para ver el reporte de ventas por tipo de carne
+$router->get('/reportes', 'App\Controllers\ReportesController@index');
+$router->get('/reportes/exportarReporte', 'App\Controllers\ReportesController@exportarReporte');
+
+

@@ -18,6 +18,8 @@
             <!--portada-->
             <li class="nav-item"><a class="nav-link" href="portada"><i class="fas fa-home"></i><span>Portada</span></a></li>
             <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i><span>Estadisticas</span></a></li> -->
+            <li class="nav-item"><a class="nav-link" href="reportes"><i class="fas fa-file-alt"></i><span>Reportes</span></a></li>
+
 
         </ul>
         <div class="text-center d-none d-md-inline"><button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button></div>

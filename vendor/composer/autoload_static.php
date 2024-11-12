@@ -39,6 +39,10 @@ class ComposerStaticInitb127b3cb0a2230549feb1b035b78db6d
         array (
             'GrahamCampbell\\ResultType\\' => 26,
         ),
+        'F' => 
+        array (
+            'Fpdf\\' => 5,
+        ),
         'D' => 
         array (
             'Dotenv\\' => 7,
@@ -98,6 +102,10 @@ class ComposerStaticInitb127b3cb0a2230549feb1b035b78db6d
         'GrahamCampbell\\ResultType\\' => 
         array (
             0 => __DIR__ . '/..' . '/graham-campbell/result-type/src',
+        ),
+        'Fpdf\\' => 
+        array (
+            0 => __DIR__ . '/..' . '/fpdf/fpdf/src/Fpdf',
         ),
         'Dotenv\\' => 
         array (
