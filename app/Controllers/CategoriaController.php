@@ -67,4 +67,34 @@ class CategoriaController extends Controller
             ], 500)->send();
         }
     }
+
+    public function deleteCategoria()
+{
+    try {
+        $id = $_POST['id']; 
+        $categoria = Categoria::find($id);
+        
+        if (!$categoria) {
+            return Response::json([
+                'success' => false,
+                'message' => 'Categoría no encontrada'
+            ], 404)->send();
+        }
+        
+    
+        $categoria->delete();
+        
+        return Response::json([
+            'success' => true,
+            'message' => 'Categoría eliminada correctamente'
+        ])->send();
+    } catch (\Exception $e) {
+        return Response::json([
+            'success' => false,
+            'message' => $e->getMessage()
+        ], 500)->send();
+    }
+}
+
+
 }

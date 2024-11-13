@@ -49,7 +49,9 @@ View::section('content');
                         <td data-label="Descripcion"><?= $categoria['descripcion'] ?></td>
                         <td data-label="Acciones">
                             <button class="btn btn-sm btn-primary" onclick="editarCategoria(<?= $categoria['id'] ?>)"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-sm btn-danger" href="#"><i class="fas fa-trash"></i></button>
+                            <button class="btn btn-sm btn-danger" onclick="eliminarCategoria(<?= $categoria['id'] ?>)"><i class="fas fa-trash"></i></button>
+
+                            </button>
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -250,6 +252,46 @@ View::section('scripts');
             }
         });
     }
+
+    const eliminarCategoria = (id) => {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: "¡No podrás revertir esto!",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Sí, eliminarlo!'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            $.ajax({
+                url: '/categorias/delete', 
+                type: 'POST',
+                data: {
+                    id: id 
+                },
+                success: function(response) {
+                    Swal.fire(
+                        'Eliminado!',
+                        response.message,
+                        'success'
+                    ).then(() => {
+                        location.reload(); 
+                    });
+                },
+                error: function(error) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error',
+                        text: 'Ocurrió un error al eliminar la categoría.',
+                    });
+                }
+            });
+        }
+    });
+}
+
+
 </script>
 <?php
 View::endSection('scripts');

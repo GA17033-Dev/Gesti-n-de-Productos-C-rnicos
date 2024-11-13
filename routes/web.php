@@ -38,6 +38,7 @@ $router->post('/roles/recover', 'App\Controllers\RolController@recoverRol');
 $router->get('/categorias', 'App\Controllers\CategoriaController@index');
 $router->post('/categorias/store', 'App\Controllers\CategoriaController@store');
 $router->post('/categorias/update', 'App\Controllers\CategoriaController@updateCategoria');
+$router->post('/categorias/delete', 'App\Controllers\CategoriaController@deleteCategoria');
 $router->post('/productos/store', 'App\Controllers\ProductoController@store');
 $router->post('/productos/update', 'App\Controllers\ProductoController@updateProducto');
 $router->post('/productos/delete', 'App\Controllers\ProductoController@deleteProducto');
