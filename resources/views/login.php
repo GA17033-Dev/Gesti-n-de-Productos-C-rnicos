@@ -309,7 +309,7 @@
                 return;
             }
 
-            if (!password || password.length < 6) {
+            if (!password) {
                 Swal.fire({
                     icon: 'error',
                     title: 'Error',
