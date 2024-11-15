@@ -297,10 +297,10 @@ View::section('scripts');
             "order": [
                 [0, "desc"]
             ],
-            "pageLength": 10,
+            "pageLength": 5,
             "lengthMenu": [
-                [5, 10, 25, 50, -1],
-                [5, 10, 25, 50, "Todos"]
+                [5, 10, 20, -1],
+                [5, 10, 20, "Todos"]
             ],
             responsive: true,
             paginate: true,
