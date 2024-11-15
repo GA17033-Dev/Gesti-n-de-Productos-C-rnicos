@@ -49,7 +49,7 @@ View::section('content');
                         <td data-label="Telefono"><?= $user['telefono'] ?? '' ?></td>
                         <td data-label="Acciones">
                             <button class="btn btn-sm btn-primary" onclick="editUser(<?= $user['id'] ?>)"><i class="fas fa-edit"></i></button>
-                            <button class="btn btn-sm btn-danger" href="#"><i class="fas fa-trash"></i></button>
+                            <!-- <button class="btn btn-sm btn-danger" onclick="deleteUser(<?= $user['id'] ?>)"><i class="fas fa-trash"></i></button> -->
                         </td>
                     </tr>
                 <?php endforeach; ?>
@@ -242,6 +242,67 @@ View::section('scripts');
             });
         }, 1000);
     }
+
+    // const deleteUser = (id) => {
+    //     Swal.fire({
+    //         title: '¿Estás seguro?',
+    //         text: "¡No podrás revertir esto!",
+    //         icon: 'warning',
+    //         showCancelButton: true,
+    //         confirmButtonColor: '#3085d6',
+    //         cancelButtonColor: '#d33',
+    //         confirmButtonText: 'Sí, eliminarlo!'
+    //     }).then((result) => {
+    //         if (result.isConfirmed) {
+    //             Swal.fire({
+    //                 icon: 'info',
+    //                 title: 'Procesando',
+    //                 text: "Espere un momento por favor",
+    //                 showConfirmButton: false,
+    //                 allowOutsideClick: false,
+    //                 heightAuto: false,
+    //                 scrollbarPadding: false,
+    //                 willOpen: () => {
+    //                     Swal.showLoading();
+    //                 }
+    //             });
+    //             setTimeout(() => {
+    //                 $.ajax({
+    //                     url: '/users/delete',
+    //                     type: 'POST',
+    //                     data: {
+    //                         id
+    //                     },
+    //                     success: function(response) {
+    //                         Swal.close();
+    //                         Swal.fire({
+    //                             icon: 'success',
+    //                             title: "Éxito",
+    //                             text: response.message,
+    //                             confirmButtonText: "Aceptar",
+    //                             allowOutsideClick: false,
+    //                             allowEscapeKey: false,
+    //                             heightAuto: false,
+    //                             scrollbarPadding: false
+    //                         }).then((result) => {
+    //                             if (result.isConfirmed) {
+    //                                 location.reload();
+    //                             }
+    //                         });
+    //                     },
+    //                     error: function(error) {
+    //                         Swal.close();
+    //                         Swal.fire({
+    //                             icon: 'error',
+    //                             title: 'Error',
+    //                             text: 'Ocurrió un error al procesar la solicitud',
+    //                         });
+    //                     }
+    //                 });
+    //             }, 1000);
+    //         }
+    //     });
+    // }
 </script>
 <?php
 View::endSection('scripts');
