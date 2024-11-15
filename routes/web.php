@@ -65,5 +65,7 @@ $router->get('/reportes/ventas-tipo-carne', 'App\Controllers\ReporteController@v
 // Ruta para ver el reporte de ventas por tipo de carne
 $router->get('/reportes', 'App\Controllers\ReportesController@index');
 $router->get('/reportes/exportarReporte', 'App\Controllers\ReportesController@exportarReporte');
+///users/update
+$router->post('/users/update', 'App\Controllers\UserController@update');
 
 
