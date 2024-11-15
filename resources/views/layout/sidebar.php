@@ -8,6 +8,8 @@
         <hr class="sidebar-divider my-0">
         <ul class="navbar-nav text-light" id="accordionSidebar">
             <li class="nav-item"><a class="nav-link active" href="dashboard"><i class="fas fa-tachometer-alt"></i><span>Dashboard</span></a></li>
+            <li class="nav-item"><a class="nav-link" href="portada"><i class="fas fa-home"></i><span>Portada</span></a></li>
+
             <!--productos , categorias, usuarios, ventas estadisticas poner iconos-->
             <li class="nav-item"><a class="nav-link" href="productos"><i class="fas fa-box"></i><span>Productos</span></a></li>
             <li class="nav-item"><a class="nav-link" href="categorias"><i class="fas fa-list"></i><span>Categorias</span></a></li>
@@ -16,7 +18,6 @@
             <li class="nav-item"><a class="nav-link" href="roles"><i class="fas fa-user-shield"></i><span>Roles</span></a></li>
             <li class="nav-item"><a class="nav-link" href="ventas"><i class="fas fa-chart-line"></i><span>Ventas</span></a></li>
             <!--portada-->
-            <li class="nav-item"><a class="nav-link" href="portada"><i class="fas fa-home"></i><span>Portada</span></a></li>
             <!-- <li class="nav-item"><a class="nav-link" href="#"><i class="fas fa-chart-bar"></i><span>Estadisticas</span></a></li> -->
             <li class="nav-item"><a class="nav-link" href="reportes"><i class="fas fa-file-alt"></i><span>Reportes</span></a></li>
 
