@@ -3,53 +3,214 @@
 use App\Lib\View;
 
 View::extends('layout/layout');
-
 View::section('title');
-echo 'Listado de Productos';
+echo 'Gestión de Productos';
 View::endSection('title');
 
 View::section('content');
 ?>
 <style>
-    .table-group-divider tr td {
-        border-top: 1px solid #dee2e6;
+    .card {
+        border: none;
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0, 0, 0, 0.05);
     }
 
-    .table-group-divider tr:first-child td {
-        border-top: 0;
+    .table-container {
+        background: white;
+        border-radius: 15px;
+        padding: 25px;
+        margin-top: 20px;
     }
 
-    .table-group-divider tr:last-child td {
-        border-bottom: 0;
+    .table thead th {
+        background-color: #f8f9fa;
+        border: none;
+        color: #6c757d;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.85rem;
+        letter-spacing: 0.5px;
+        padding: 15px;
+    }
+
+    .table td {
+        padding: 15px;
+        vertical-align: middle;
+        border: none;
+        color: #495057;
+    }
+
+    .table tbody tr {
+        border-bottom: 1px solid #f1f1f1;
+        transition: all 0.2s ease;
+    }
+
+    .table tbody tr:hover {
+        background-color: #f8f9fa;
+        transform: translateY(-1px);
+    }
+
+    .btn-action {
+        width: 35px;
+        height: 35px;
+        padding: 0;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        border-radius: 8px;
+        transition: all 0.2s ease;
+        margin: 0 3px;
+    }
+
+    .btn-edit {
+        background-color: #3498db;
+        border: none;
+        color: white;
+    }
+
+    .btn-delete {
+        background-color: #e74c3c;
+        border: none;
+        color: white;
+    }
+
+    .btn-activate {
+        background-color: #2ecc71;
+        border: none;
+        color: white;
+    }
+
+    .btn-edit:hover,
+    .btn-delete:hover,
+    .btn-activate:hover {
+        transform: translateY(-2px);
+        color: white;
+    }
+
+    .modal-content {
+        border: none;
+        border-radius: 15px;
+    }
+
+    .modal-header {
+        border-bottom: 1px solid #f1f1f1;
+        padding: 20px 25px;
+    }
+
+    .modal-body {
+        padding: 25px;
+    }
+
+    .form-label {
+        color: #6c757d;
+        font-weight: 500;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    .form-select {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 12px 15px;
+        transition: all 0.2s ease;
+    }
+
+    .form-control:focus,
+    .form-select:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.1);
+    }
+
+    .modal-footer {
+        border-top: 1px solid #f1f1f1;
+        padding: 20px 25px;
+    }
+
+    .btn-group-actions {
+        gap: 8px;
+        display: flex;
+        flex-wrap: wrap;
+    }
+
+    .btn-group-actions .btn {
+        padding: 8px 16px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+        border-radius: 8px;
+        font-weight: 500;
+        transition: all 0.2s ease;
+    }
+
+    .badge {
+        padding: 6px 12px;
+        border-radius: 6px;
+        font-weight: 500;
+        font-size: 0.85rem;
+    }
+
+    .price-column {
+        font-weight: 600;
+        color: #2ecc71;
+    }
+
+    .stock-column {
+        font-weight: 500;
+    }
+
+    /* DataTables customization */
+    .dataTables_wrapper .dataTables_filter input {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 8px 12px;
+    }
+
+    .dataTables_wrapper .dataTables_length select {
+        border: 1px solid #e0e0e0;
+        border-radius: 8px;
+        padding: 5px 10px;
+    }
+
+    .page-item.active .page-link {
+        background-color: #3498db;
+        border-color: #3498db;
     }
 </style>
-<h1 class="h3 mb-4 text-gray-800 text-center">Listado de Productos</h1>
-<div class="container-fluid">
-    <div class="d-flex flex-wrap justify-content-between align-items-center mb-3">
-        <div class="d-flex flex-wrap gap-2">
-            <button type="button" class="btn btn-primary btn-sm flex-grow-1 flex-md-grow-0" data-bs-toggle="modal" data-bs-target="#addProductModal" title="Agregar Producto">
-                <i class="fas fa-plus"></i>
-                Agregar Producto
-            </button>
-            <!-- Botón para exportar a PDF -->
-            <button type="button" class="btn btn-danger btn-sm flex-grow-1 flex-md-grow-0" onclick="exportTableToPDF()" title="Exportar a PDF">
-                <i class="fas fa-file-pdf"></i>
-                Exportar a PDF
-            </button>
-            <!--exportar en excel-->
-            <button type="button" class="btn btn-success btn-sm flex-grow-1 flex-md-grow-0" onclick="exportTableToExcel('users', 'productos')" title="Exportar a Excel">
-                <i class="fas fa-file-excel"></i>
-                Exportar a Excel
-            </button>
+
+<div class="container-fluid py-4">
+    <div class="row mb-4">
+        <div class="col">
+            <h1 class="h4 text-gray-800 mb-1">Gestión de Productos</h1>
+            <p class="text-muted mb-0">Administra el catálogo de productos</p>
         </div>
     </div>
-    <div class="table table-bordered table-hover">
-        <table id="users" class="table table-bordered table-hover mb-4 " style="width:100%">
-            <thead class="thead-dark">
+
+    <div class="card mb-4">
+        <div class="card-body">
+            <div class="btn-group-actions">
+                <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#addProductModal">
+                    <i class="fas fa-plus"></i>
+                    Nuevo Producto
+                </button>
+                <button type="button" class="btn btn-danger" onclick="exportTableToPDF()">
+                    <i class="fas fa-file-pdf"></i>
+                    Exportar PDF
+                </button>
+                <button type="button" class="btn btn-success" onclick="exportTableToExcel('users', 'productos')">
+                    <i class="fas fa-file-excel"></i>
+                    Exportar Excel
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <div class="card table-container">
+        <table id="users" class="table table-hover">
+            <thead>
                 <tr>
-                    <th>Nombre</th>
-                    <th>Categoria</th>
-                    <th>Descripcion</th>
+                    <th>Producto</th>
+                    <th>Detalles</th>
                     <th>Precio</th>
                     <th>Stock</th>
                     <th>Estado</th>
@@ -57,117 +218,163 @@ View::section('content');
                 </tr>
             </thead>
             <tbody>
-
                 <?php foreach ($productos as $producto) : ?>
                     <tr>
-                        <td data-label="Nombre"><?= $producto['nombre'] ?></td>
-                        <td data-label="Categoria"><?= $producto['categoria']['nombre'] ?></td>
-                        <td data-label="Descripcion"><?= $producto['descripcion'] ?></td>
-                        <td data-label="Precio"> $ <?= $producto['precio'] ?></td>
-                        <td data-label="Stock"><?= $producto['stock'] ?></td>
-                        <td data-label="Estado"><?= $producto['estado'] ? '<span class="badge bg-success">Activo</span>' : '<span class="badge bg-danger">Inactivo</span>' ?></td>
-                        <td data-label="Acciones">
-                            <button class="btn btn-sm btn-primary" onclick="editarProducto(<?= $producto['id'] ?>)"><i class="fas fa-edit"></i></button>
-                            <?php if ($producto['estado']) : ?>
-                                <button class="btn btn-sm btn-danger" onclick="eliminarProducto(<?= $producto['id'] ?>,false)" title="Eliminar"><i class="fas fa-trash"></i></button>
+                        <td>
+                            <div class="d-flex align-items-center">
+                                <div class="ms-3">
+                                    <h6 class="mb-0"><?= $producto['nombre'] ?></h6>
+                                    <small class="text-muted"><?= $producto['categoria']['nombre'] ?></small>
+                                </div>
+                            </div>
+                        </td>
+                        <td>
+                            <small class="text-muted d-block"><?= $producto['descripcion'] ?></small>
+                        </td>
+                        <td class="price-column">$<?= number_format($producto['precio'], 2) ?></td>
+                        <td class="stock-column">
+                            <?php if ($producto['stock'] <= 10) : ?>
+                                <span class="badge bg-warning text-dark"><?= $producto['stock'] ?> unidades</span>
                             <?php else : ?>
-                                <button class="btn btn-sm btn-success" onclick="activarProducto(<?= $producto['id'] ?>,true)" title="Activar"><i class="fas fa-check"></i></button>
+                                <?= $producto['stock'] ?> unidades
                             <?php endif; ?>
-
+                        </td>
+                        <td>
+                            <?php if ($producto['estado']) : ?>
+                                <span class="badge bg-success">Activo</span>
+                            <?php else : ?>
+                                <span class="badge bg-danger">Inactivo</span>
+                            <?php endif; ?>
+                        </td>
+                        <td>
+                            <div class="d-flex gap-2">
+                                <button class="btn btn-action btn-edit" onclick="editarProducto(<?= $producto['id'] ?>)" title="Editar">
+                                    <i class="fas fa-edit"></i>
+                                </button>
+                                <?php if ($producto['estado']) : ?>
+                                    <button class="btn btn-action btn-delete" onclick="eliminarProducto(<?= $producto['id'] ?>,false)" title="Desactivar">
+                                        <i class="fas fa-trash"></i>
+                                    </button>
+                                <?php else : ?>
+                                    <button class="btn btn-action btn-activate" onclick="activarProducto(<?= $producto['id'] ?>,true)" title="Activar">
+                                        <i class="fas fa-check"></i>
+                                    </button>
+                                <?php endif; ?>
+                            </div>
                         </td>
                     </tr>
                 <?php endforeach; ?>
-
             </tbody>
         </table>
     </div>
 </div>
-<!--pintar los usuarios-->
-<!--modal addProductModal-->
+
+<!-- Modal Agregar Producto -->
 <div class="modal fade" id="addProductModal" tabindex="-1" aria-labelledby="addProductModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
             <div class="modal-header">
-                <h5 class="modal-title" id="addProductModalLabel">Agregar Producto</h5>
+                <h5 class="modal-title" id="addProductModalLabel">
+                    <i class="fas fa-box me-2 text-primary"></i>
+                    Nuevo Producto
+                </h5>
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div id="formAddProduct" class="container">
-                    <div class="mb-3">
-                        <label for="nombre" class="form-label">Nombre</label>
-                        <input type="text" class="form-control" id="nombre" name="nombre" required>
+                <form id="formAddProduct">
+                    <div class="row g-3">
+                        <div class="col-12">
+                            <label class="form-label" for="nombre">Nombre del Producto</label>
+                            <input type="text" class="form-control" id="nombre" name="nombre" required>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="categoria">Categoría</label>
+                            <select class="form-select" id="categoria" name="categoria" required>
+                                <option value="">Seleccionar categoría</option>
+                                <?php foreach ($categorias as $categoria) : ?>
+                                    <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
+                                <?php endforeach; ?>
+                            </select>
+                        </div>
+                        <div class="col-12">
+                            <label class="form-label" for="descripcion">Descripción</label>
+                            <textarea class="form-control" id="descripcion" name="descripcion" rows="3" required></textarea>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="precio">Precio</label>
+                            <div class="input-group">
+                                <span class="input-group-text">$</span>
+                                <input type="number" class="form-control" id="precio" name="precio" step="0.01" required>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="form-label" for="stock">Stock</label>
+                            <input type="number" class="form-control" id="stock" name="stock" required>
+                        </div>
                     </div>
-                    <div class="mb-3">
-                        <label for="categoria" class="form-label">Categoria</label>
-                        <select class="form-select" id="categoria" name="categoria" required>
-                            <option value="">Seleccione una categoria</option>
-                            <?php foreach ($categorias as $categoria) : ?>
-                                <option value="<?= $categoria['id'] ?>"><?= $categoria['nombre'] ?></option>
-                            <?php endforeach; ?>
-                        </select>
-                    </div>
-                    <div class="mb-3">
-                        <label for="descripcion" class="form-label">Descripcion</label>
-                        <textarea class="form-control" id="descripcion" name="descripcion" required></textarea>
-                    </div>
-                    <div class="mb-3">
-                        <label for="precio" class="form-label">Precio</label>
-                        <input type="number" class="form-control" id="precio" name="precio" required>
-                    </div>
-                    <div class="mb-3">
-                        <label for="stock" class="form-label">Stock</label>
-                        <input type="number" class="form-control" id="stock" name="stock" required>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                        <button type="button" class="btn btn-primary" onclick="guardarProducto()">Guardar</button>
-                    </div>
-                </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarProducto()">
+                    <i class="fas fa-save me-2"></i>Guardar Producto
+                </button>
             </div>
         </div>
     </div>
 </div>
-<!--fin modal addProductModal-->
+
+<!-- Modal Editar Producto -->
 <?php foreach ($productos as $producto) : ?>
     <div class="modal fade" id="editProductModal<?= $producto['id'] ?>" tabindex="-1" aria-labelledby="editProductModalLabel<?= $producto['id'] ?>" aria-hidden="true">
-        <div class="modal-dialog">
+        <div class="modal-dialog modal-dialog-centered">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="editProductModalLabel<?= $producto['id'] ?>">Editar Producto</h5>
+                    <h5 class="modal-title" id="editProductModalLabel<?= $producto['id'] ?>">
+                        <i class="fas fa-edit me-2 text-primary"></i>
+                        Editar Producto
+                    </h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
-                    <div id="formEditProduct" class="container">
-                        <div class="mb-3">
-                            <label for="nombre" class="form-label">Nombre</label>
-                            <input type="text" class="form-control" id="nombre<?= $producto['id'] ?>" name="nombre" value="<?= $producto['nombre'] ?>" required>
+                    <form id="formEditProduct<?= $producto['id'] ?>">
+                        <div class="row g-3">
+                            <div class="col-12">
+                                <label class="form-label" for="nombre<?= $producto['id'] ?>">Nombre del Producto</label>
+                                <input type="text" class="form-control" id="nombre<?= $producto['id'] ?>" name="nombre" value="<?= $producto['nombre'] ?>" required>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="categoria<?= $producto['id'] ?>">Categoría</label>
+                                <select class="form-select" id="categoria<?= $producto['id'] ?>" name="categoria" required>
+                                    <option value="">Seleccionar categoría</option>
+                                    <?php foreach ($categorias as $categoria) : ?>
+                                        <option value="<?= $categoria['id'] ?>" <?= $producto['id_categoria'] == $categoria['id'] ? 'selected' : '' ?>><?= $categoria['nombre'] ?></option>
+                                    <?php endforeach; ?>
+                                </select>
+                            </div>
+                            <div class="col-12">
+                                <label class="form-label" for="descripcion<?= $producto['id'] ?>">Descripción</label>
+                                <textarea class="form-control" id="descripcion<?= $producto['id'] ?>" name="descripcion" rows="3" required><?= $producto['descripcion'] ?></textarea>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="precio<?= $producto['id'] ?>">Precio</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">$</span>
+                                    <input type="number" class="form-control" id="precio<?= $producto['id'] ?>" name="precio" value="<?= $producto['precio'] ?>" step="0.01" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <label class="form-label" for="stock<?= $producto['id'] ?>">Stock</label>
+                                <input type="number" class="form-control" id="stock<?= $producto['id'] ?>" name="stock" value="<?= $producto['stock'] ?>" required>
+                            </div>
                         </div>
-                        <div class="mb-3">
-                            <label for="categoria" class="form-label">Categoria</label>
-                            <select class="form-select" id="categoria<?= $producto['id'] ?>" name="categoria" required>
-                                <option value="">Seleccione una categoria</option>
-                                <?php foreach ($categorias as $categoria) : ?>
-                                    <option value="<?= $categoria['id'] ?>" <?= $producto['id_categoria'] == $categoria['id'] ? 'selected' : '' ?>><?= $categoria['nombre'] ?></option>
-                                <?php endforeach; ?>
-                            </select>
-                        </div>
-                        <div class="mb-3">
-                            <label for="descripcion" class="form-label">Descripcion</label>
-                            <textarea class="form-control" id="descripcion<?= $producto['id'] ?>" name="descripcion" required><?= $producto['descripcion'] ?></textarea>
-                        </div>
-                        <div class="mb-3">
-                            <label for="precio" class="form-label">Precio</label>
-                            <input type="number" class="form-control" id="precio<?= $producto['id'] ?>" name="precio" value="<?= $producto['precio'] ?>" required>
-                        </div>
-                        <div class="mb-3">
-                            <label for="stock" class="form-label">Stock</label>
-                            <input type="number" class="form-control" id="stock<?= $producto['id'] ?>" name="stock" value="<?= $producto['stock'] ?>" required>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
-                            <button type="button" class="btn btn-primary" onclick="updateProducto(<?= $producto['id'] ?>)">Guardar</button>
-                        </div>
-                    </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                    <button type="button" class="btn btn-primary" onclick="updateProducto(<?= $producto['id'] ?>)">
+                        <i class="fas fa-save me-2"></i>Guardar Cambios
+                    </button>
                 </div>
             </div>
         </div>
@@ -183,8 +390,10 @@ View::section('scripts');
 <script>
     const exportTableToPDF = () => {
         // Usar jsPDF para generar el PDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF('landscape');  // Establecer la orientación horizontal (landscape)
+        const {
+            jsPDF
+        } = window.jspdf;
+        const doc = new jsPDF('landscape'); // Establecer la orientación horizontal (landscape)
 
         // Obtener los datos de la tabla
         const table = document.getElementById('users');
@@ -199,40 +408,56 @@ View::section('scripts');
         const tableHeaders = tableData.shift();
 
         // Añadir los encabezados al PDF
-        doc.text('Reporte de Productos', 297 / 2, 10, null, null, 'center');  // Título centrado en el documento
+        doc.text('Reporte de Productos', 297 / 2, 10, null, null, 'center'); // Título centrado en el documento
 
         doc.autoTable({
             head: [tableHeaders],
             body: tableData,
-            margin: { top: 20 },
-            theme: 'striped',  // Puedes cambiarlo a 'grid', 'plain', o 'striped'
+            margin: {
+                top: 20
+            },
+            theme: 'striped', // Puedes cambiarlo a 'grid', 'plain', o 'striped'
             styles: {
-                fontSize: 10,              // Tamaño de la fuente
-                cellPadding: 5,            // Espaciado entre celdas
-                halign: 'center',          // Alineación horizontal (center, left, right)
-                valign: 'middle',          // Alineación vertical (top, middle, bottom)
-                font: 'helvetica',         // Tipo de letra
-                lineColor: [44, 62, 80],   // Color de la línea
-                lineWidth: 0.5             // Grosor de la línea
+                fontSize: 10, // Tamaño de la fuente
+                cellPadding: 5, // Espaciado entre celdas
+                halign: 'center', // Alineación horizontal (center, left, right)
+                valign: 'middle', // Alineación vertical (top, middle, bottom)
+                font: 'helvetica', // Tipo de letra
+                lineColor: [44, 62, 80], // Color de la línea
+                lineWidth: 0.5 // Grosor de la línea
             },
             headStyles: {
-                fillColor: [44, 62, 80],   // Color de fondo para los encabezados
+                fillColor: [44, 62, 80], // Color de fondo para los encabezados
                 textColor: [255, 255, 255] // Color del texto en los encabezados
             },
             bodyStyles: {
                 fillColor: [255, 255, 255], // Color de fondo de las filas (puedes alternarlo si deseas)
-                textColor: [0, 0, 0]         // Color de texto de las filas
+                textColor: [0, 0, 0] // Color de texto de las filas
             },
             columnStyles: {
-                0: { cellWidth: 40 },  // Establece el ancho de la primera columna
-                1: { cellWidth: 'auto' }, // Ajuste automático para la segunda columna
-                2: { cellWidth: 50 }, // Establece un ancho fijo para la tercera columna
-                3: { cellWidth: 30 }, // Establece el ancho de la cuarta columna
-                4: { cellWidth: 30 }, // Establece el ancho de la quinta columna
-                5: { cellWidth: 30 }, // Establece el ancho de la sexta columna
-                6: { cellWidth: 40 }  // Establece el ancho de la séptima columna
+                0: {
+                    cellWidth: 40
+                }, // Establece el ancho de la primera columna
+                1: {
+                    cellWidth: 'auto'
+                }, // Ajuste automático para la segunda columna
+                2: {
+                    cellWidth: 50
+                }, // Establece un ancho fijo para la tercera columna
+                3: {
+                    cellWidth: 30
+                }, // Establece el ancho de la cuarta columna
+                4: {
+                    cellWidth: 30
+                }, // Establece el ancho de la quinta columna
+                5: {
+                    cellWidth: 30
+                }, // Establece el ancho de la sexta columna
+                6: {
+                    cellWidth: 40
+                } // Establece el ancho de la séptima columna
             },
-            showHead: 'everyPage',  // Mostrar encabezado en todas las páginas (en caso de que se necesite más de una página)
+            showHead: 'everyPage', // Mostrar encabezado en todas las páginas (en caso de que se necesite más de una página)
         });
 
         // Descargar el archivo PDF
@@ -427,7 +652,7 @@ View::section('scripts');
                 tipo
             },
             xhrFields: {
-                responseType: 'blob' 
+                responseType: 'blob'
             },
             success: function(response) {
                 const blob = new Blob([response], {

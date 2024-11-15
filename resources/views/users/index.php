@@ -300,31 +300,30 @@ View::section('scripts');
     $(document).ready(function() {
         $('#users').DataTable({
             "language": {
-                "lengthMenu": "_MENU_ por página",
+                "lengthMenu": "Mostrar _MENU_ registros por página",
                 "zeroRecords": "No se encontraron registros",
-                "searchPlaceholder": "Buscar usuario...",
-                "info": "_START_ - _END_ de _TOTAL_",
-                "infoEmpty": "0 registros",
-                "infoFiltered": "(de _MAX_ registros)",
-                "search": "",
+                "searchPlaceholder": "Buscar",
+                "info": "Mostrando la página _PAGE_ de _PAGES_",
+                "infoEmpty": "No hay registros disponibles",
+                "infoFiltered": "(filtrado de _MAX_ registros totales)",
+                "search": "Buscar:",
                 "paginate": {
                     "first": "Primero",
                     "last": "Último",
-                    "next": "→",
-                    "previous": "←"
+                    "next": "Siguiente",
+                    "previous": "Anterior"
                 },
             },
             "order": [
-                [0, "asc"]
+                [0, "desc"]
             ],
-            "pageLength": 5,
+            "pageLength": 10,
             "lengthMenu": [
                 [5, 10, 25, 50, -1],
                 [5, 10, 25, 50, "Todos"]
             ],
             responsive: true,
             paginate: true,
-            dom: '<"d-flex justify-content-between align-items-center mb-4"fl>rt<"d-flex justify-content-between align-items-center mt-4"ip>'
         });
     });
     const editUser = (id) => {
