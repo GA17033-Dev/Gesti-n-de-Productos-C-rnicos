@@ -12,13 +12,14 @@
         <hr class="sidebar-divider my-0">
 
         <ul class="navbar-nav text-light" id="accordionSidebar">
-            <!-- Menú común para ambos roles -->
-            <li class="nav-item">
-                <a class="nav-link" href="dashboard">
-                    <i class="fas fa-tachometer-alt"></i>
-                    <span>Dashboard</span>
-                </a>
-            </li>
+            <?php if ($_SESSION['user_rol'] == 1): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="dashboard">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+            <?php endif; ?>
             <li class="nav-item">
                 <a class="nav-link" href="portada">
                     <i class="fas fa-home"></i>

@@ -273,9 +273,11 @@ class HomeController extends Controller
         // Obtener los datos necesarios para el dashboard
         $productos = $this->obtenerProductos(); // Obtener productos
         $categorias = $this->obtenerCategorias(); // Obtener categorías
-
-        // Pasar los datos a la vista
-        View::render('dashboard/index', compact('productos', 'categorias'));
+        if (($_SESSION['user_id']) == 1) {
+            View::render('dashboard/index', compact('productos', 'categorias'));
+        } else {
+            View::render('ventas/ventas');
+        }
     }
     // Método para obtener categorías
     public function obtenerCategorias()
