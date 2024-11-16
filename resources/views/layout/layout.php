@@ -22,12 +22,12 @@ use App\Lib\View;
 
 <body id="page-top">
     <div id="wrapper">
-        <?php 
-            //si el usuario es administrador, se muestra el sidebar
-            if($_SESSION['user_rol']==1){
-                include __DIR__ . "/sidebar.php";
-            }
-            ?>
+        <?php
+        //si el usuario es administrador, se muestra el sidebar
+        // if($_SESSION['user_rol']==1){
+        include __DIR__ . "/sidebar.php";
+        // }
+        ?>
         <div class="d-flex flex-column" id="content-wrapper">
             <div id="content">
                 <?php include __DIR__ . "/nav.php"; ?>
