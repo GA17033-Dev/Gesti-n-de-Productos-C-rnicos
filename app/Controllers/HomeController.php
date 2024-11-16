@@ -31,9 +31,9 @@ class HomeController extends Controller
     {
         if (isset($_SESSION['user_id'])) {
             $user_rol = $_SESSION['user_rol'];
-            if($user_rol==1){
+            if ($user_rol == 1) {
                 header('Location: /dashboard');
-            }else{
+            } else {
                 header('Location: /ventas');
             }
             //exit();
@@ -134,7 +134,7 @@ class HomeController extends Controller
                 }
             }
 
-     
+
             $ventasMensuales = array_values($ventasMensuales);
             usort($ventasMensuales, function ($a, $b) {
                 return $a['mes'] - $b['mes'];
@@ -173,7 +173,7 @@ class HomeController extends Controller
                 }
             }
 
-      
+
             $ventasHoy = array_filter($ventas, function ($venta) {
                 return !empty($venta['fecha']) &&
                     $venta['fecha'] == date('Y-m-d') &&
@@ -222,10 +222,10 @@ class HomeController extends Controller
 
     public function login()
     {
-        /*if (isset($_SESSION['user_id'])) {
+        if (isset($_SESSION['user_id'])) {
             header('Location: /dashboard');
             exit();
-        }*/
+        }
 
 
         if ($_SERVER['REQUEST_METHOD'] === 'POST') {
@@ -236,9 +236,9 @@ class HomeController extends Controller
                 $user = User::where('email', $email)->first();
                 $_SESSION['user_id'] = $user->id;
                 $_SESSION['user_email'] = $user->email;
-                
-            // buscar rol
-            
+
+                // buscar rol
+
                 //se envia el id_usuario y se comprueba que 
                 Functions::attemptRol($_SESSION['user_id']);
 

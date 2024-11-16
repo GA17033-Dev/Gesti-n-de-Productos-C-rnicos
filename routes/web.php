@@ -15,7 +15,7 @@ $authMiddleware = function () {
 // Rutas públicas
 $router->get('/', 'App\Controllers\HomeController@index');
 $router->post('/store', 'App\Controllers\HomeController@store');
-// $router->match('GET|POST', '/login', 'App\Controllers\HomeController@login');
+$router->match('GET|POST', '/login', 'App\Controllers\HomeController@login');
 $router->get('/register', 'App\Controllers\HomeController@register');
 $router->post('/register/user', 'App\Controllers\HomeController@registerUser');
 
@@ -52,7 +52,7 @@ $router->post('/profile/update', 'App\Controllers\UserController@updateProfile')
 $router->get('/obtener_totales', 'App\Controllers\HomeController@obtenerTotales');
 $router->get('/logout', 'App\Controllers\HomeController@logout');
 //login
-$router->post('/login', 'App\Controllers\HomeController@login');
+//$router->post('/login', 'App\Controllers\HomeController@login');
 
 //ventas/store
 $router->post('/ventas/store', 'App\Controllers\VentaController@store');
@@ -67,5 +67,3 @@ $router->get('/reportes', 'App\Controllers\ReportesController@index');
 $router->get('/reportes/exportarReporte', 'App\Controllers\ReportesController@exportarReporte');
 ///users/update
 $router->post('/users/update', 'App\Controllers\UserController@update');
-
-
