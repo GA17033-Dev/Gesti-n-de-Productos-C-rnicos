@@ -8,9 +8,9 @@
                 <span>Carnicos</span>
             </div>
         </a>
-        
+
         <hr class="sidebar-divider my-0">
-        
+
         <ul class="navbar-nav text-light" id="accordionSidebar">
             <!-- Menú común para ambos roles -->
             <li class="nav-item">
@@ -37,23 +37,23 @@
                     <span>Categorias</span>
                 </a>
             </li>
-            
+
             <!-- Menú solo para administrador (rol_id = 1) -->
-            <?php if($_SESSION['user_rol'] == 1): ?>
-            <li class="nav-item">
-                <a class="nav-link" href="usuarios">
-                    <i class="fas fa-users"></i>
-                    <span>Usuarios</span>
-                </a>
-            </li>
-            <li class="nav-item">
-                <a class="nav-link" href="roles">
-                    <i class="fas fa-user-shield"></i>
-                    <span>Roles</span>
-                </a>
-            </li>
+            <?php if ($_SESSION['user_rol'] == 1): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="usuarios">
+                        <i class="fas fa-users"></i>
+                        <span>Usuarios</span>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="roles">
+                        <i class="fas fa-user-shield"></i>
+                        <span>Roles</span>
+                    </a>
+                </li>
             <?php endif; ?>
-            
+
             <!-- Menú común -->
             <li class="nav-item">
                 <a class="nav-link" href="ventas">
@@ -61,17 +61,18 @@
                     <span>Ventas</span>
                 </a>
             </li>
-            <li class="nav-item">
-                <a class="nav-link" href="reportes">
-                    <i class="fas fa-file-alt"></i>
-                    <span>Reportes</span>
-                </a>
-            </li>
+            <?php if ($_SESSION['user_rol'] == 1): ?>
+                <li class="nav-item">
+                    <a class="nav-link" href="reportes">
+                        <i class="fas fa-file-alt"></i>
+                        <span>Reportes</span>
+                    </a>
+                </li>
+            <?php endif; ?>
         </ul>
-        
+
         <div class="text-center d-none d-md-inline">
             <button class="btn rounded-circle border-0" id="sidebarToggle" type="button"></button>
         </div>
     </div>
 </nav>
-
