@@ -273,7 +273,7 @@ class HomeController extends Controller
         // Obtener los datos necesarios para el dashboard
         $productos = $this->obtenerProductos(); // Obtener productos
         $categorias = $this->obtenerCategorias(); // Obtener categorías
-        if (($_SESSION['user_id']) == 1) {
+        if (($_SESSION['user_rol']) == 1) {
             View::render('dashboard/index', compact('productos', 'categorias'));
         } else {
             View::render('ventas/ventas');
