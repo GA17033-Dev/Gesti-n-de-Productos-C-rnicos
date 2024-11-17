@@ -8,11 +8,18 @@ use App\Models\Producto;
 use App\Models\DetalleVenta;
 use App\Lib\Functions;
 use App\Lib\Response;
+use App\Lib\View;
+use App\Models\User;
 use Exception;
-use Illuminate\Support\Facades\DB;
 
 class VentaController extends Controller
 {
+
+    public function __construct()
+    {
+        parent::__construct();
+    }
+
     public function index()
     {
         return $this->render('ventas/ventas');
@@ -100,5 +107,31 @@ class VentaController extends Controller
                 'message' => 'Error al procesar la venta: ' . $e->getMessage()
             ], 500);
         }
+    }
+    //listado
+    public function ventas()
+    {
+        $ventas = Venta::all();
+        foreach ($ventas as &$venta) {
+  
+            $usuario = User::where('id', $venta['id_usuario'])->first();
+            $venta['usuario'] = $usuario ?? null;
+
+         
+            $detalleVenta = DetalleVenta::where('id_venta', $venta['id'])->get();
+            if ($detalleVenta) {
+              
+                foreach ($detalleVenta as &$detalle) {
+                    $producto = Producto::find($detalle['id_producto']);
+                    $detalle['producto'] = $producto ?? null;
+                }
+                unset($detalle); 
+            }
+
+            $venta['detalle_venta'] = $detalleVenta ?? [];
+        }
+        unset($venta);
+
+        return $this->render('ventas/index', ['ventas' => $ventas]);
     }
 }

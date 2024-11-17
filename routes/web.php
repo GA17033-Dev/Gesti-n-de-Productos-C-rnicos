@@ -67,3 +67,5 @@ $router->get('/reportes', 'App\Controllers\ReportesController@index');
 $router->get('/reportes/exportarReporte', 'App\Controllers\ReportesController@exportarReporte');
 ///users/update
 $router->post('/users/update', 'App\Controllers\UserController@update');
+
+$router->get('/ventas-listado', 'App\Controllers\VentaController@ventas');
